@@ -54,14 +54,7 @@ class UserController extends Controller
         $dosens = DosenModel::all();
 
         $data = $dosens->map(function ($dsn) {
-            return [
-                'id_dsn' => $dsn->id_dsn,
-                'nidn' => $dsn->nidn,
-                'nama_dsn' => $dsn->nama_dsn,
-                'username' => $dsn->username,
-                'email' => $dsn->email_dsn,
-                'role' => $dsn->role_dsn,
-            ];
+            return $dsn;
         });
 
         return response()->json($data);

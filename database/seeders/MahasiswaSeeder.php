@@ -17,26 +17,25 @@ class MahasiswaSeeder extends Seeder
         DB::table('mahasiswa')->insert([
             [
                 'nim' => '222107023001',
-                'nama_mhs' => 'Sarwono Haryadi',
-                'username_mhs' => 'ryadis',
-                'email_mhs' => 'ryadi@mail.com',
-                'password_mhs' => Hash::make('password123'),
-                'foto_mhs' => null,
-                'program_studi' => 1,
+                'user_id' => 3,
+                'program_studi_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nim' => '244107023002',
-                'nama_mhs' => 'Ilya Kosipov',
-                'username_mhs' => 'monesy',
-                'email_mhs' => 'ilya@mail.com',
-                'password_mhs' => Hash::make('password123'),
-                'foto_mhs' => null,
-                'program_studi' => 2,
+                'nim' => '222107023002',
+                'user_id' => 4,
+                'program_studi_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'nim' => '222107023003',
+                'user_id' => 5,
+                'program_studi_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
         ]);
     }
 }

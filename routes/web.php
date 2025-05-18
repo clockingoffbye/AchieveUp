@@ -21,7 +21,22 @@ Route::get('login', [AuthController::class, 'login'])->name('login');
 
 Route::get('/', [LandingController::class, 'index']);
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+
+Route::post('login', [AuthController::class, 'postLogin']);
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin', function () {
+        return view('dashboard');
+    });
+});
+
+Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
+    Route::get('/mahasiswa', function () {
+        return view('dashboard');
+    });
+});
 
 Route::group(['prefix' => 'users'], function () {
     Route::get('/', [UserController::class, 'index']);

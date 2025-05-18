@@ -12,15 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('dosen', function (Blueprint $table) {
-            $table->id('id_dsn');
+            $table->id();
             $table->string('nidn', 20)->unique();
-            $table->string('username', 50)->unique();
-            $table->string('nama_dsn', 100);
-            $table->string('email_dsn', 100)->unique();
-            $table->string('password_dsn');
-            $table->string('foto_dsn')->nullable();
-            $table->enum('role_dsn', ['admin', 'dosen pembimbing']);
+            $table->unsignedBigInteger('user_id')->unique()->required();
+            $table->unsignedBigInteger('program_studi_id')->required();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('program_studi_id')->references('id')->on('program_studi')->onDelete('cascade');
         });
     }
 

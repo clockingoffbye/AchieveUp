@@ -15,12 +15,16 @@ class DosenModel extends Model
 
     protected $fillable = [
         'nidn',
-        'username',
-        'nama_dsn',
-        'email_dsn',
-        'password_dsn',
-        'foto_dsn',
-        'role_dsn',
+        'program_studi',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(UserModel::class, 'user_id', 'id');
+    }
+    public function programStudi()
+    {
+        return $this->belongsTo(ProgramStudiModel::class, 'program_studi', 'id');
+    }
 
 }

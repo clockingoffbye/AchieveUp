@@ -17,14 +17,14 @@ class MahasiswaModel extends Model
 
     protected $fillable = [
         'nim',
-        'nama_mhs',
-        'username_mhs',
-        'email_mhs',
-        'password_mhs',
-        'foto_mhs',
-        'program_studi', 
+        'program_studi',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(UserModel::class, 'user_id', 'id');
+    }
+    
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudiModel::class, 'program_studi', 'id_prodi');
