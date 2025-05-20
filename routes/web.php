@@ -47,13 +47,13 @@ Route::middleware(['dosen'])->group(function () {
     });
 });
 
-Route::middleware(['admin.dosen'])->group(function () {
+Route::middleware(['dosen:admin'])->group(function () {
     Route::get('/admin/panel', function(){
         return dd('login admin dosen');
     });
 });
 
-Route::middleware(['pembimbing.dosen'])->group(function () {
+Route::middleware(['dosen:dosen pembimbing'])->group(function () {
     Route::get('/bimbingan', function(){
         return dd('login dosen pembimbing');
     });
