@@ -44,6 +44,18 @@
                             <option value="ditolak">Ditolak</option>
                         </select>
                     </div>
+                    <div class="flex items-end gap-2 ml-auto">
+                        <button
+                            id="btn-export"
+                            class="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center gap-1.5 font-medium transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            <span>Export Data</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -385,6 +397,11 @@
                 $('#show-entry, #filter-status').on('change', function() {
                     currentPage = 1;
                     renderPrestasiTable();
+                });
+
+                
+                $('#btn-export').on('click', function () {
+                    window.open('/admin/prestasi/export', '_blank');
                 });
 
                 loadPrestasi();
