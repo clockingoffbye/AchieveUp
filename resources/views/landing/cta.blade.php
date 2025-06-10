@@ -1,20 +1,75 @@
-<div class="flex flex-col lg:flex-row justify-between lg:justify-between items-center text-center lg:text-left w-full h-[274px] p-8 shrink-0 bg-cover bg-no-repeat bg-center"
-    style="
-        background-image:
-        linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-        linear-gradient(0deg, rgba(117, 88, 222, 0.3), rgba(117, 88, 222, 0.3)),
-        url('{{ asset('images/cta1.png') }}');
-     ">
-    <div class="flex flex-col items-center lg:items-start gap-4 w-full max-w-[628px]">
-        <p class="text-secondary-text text-base font-normal leading-none">
-            Call to Action
-        </p>
-        <p class="text-white font-epilogue text-3xl font-semibold leading-[50px]">
-            Siap menjadikan data prestasi sebagai dasar kemajuan kampus?
-        </p>
+<div
+    class="flex flex-col lg:flex-row w-full sm:w-[400px] lg:w-full px-4 sm:px-6 mx-16 py-8 items-center gap-6 rounded-3xl bg-gradient-to-r from-[#6041CE] via-[#6041CE] to-[#513C99] shadow-2xl backdrop-blur-sm border border-white/10 observe-animation">
+
+    <div class="flex flex-col items-center gap-1 flex-1 group transition-all duration-300 hover:scale-105">
+        <p class="w-full text-center text-2xl lg:text-3xl font-bold text-white counter" data-target="1000">0</p>
+        <p class="w-full text-center text-sm lg:text-base font-normal text-white/90">Mahasiswa Berprestasi</p>
     </div>
 
-    <div class="button-secondary flex items-center gap-3 mt-6 lg:mt-0">
-        <p class="text-base font-semibold leading-[28px] text-white">Login ke Sistem</p>
+    <span class="block lg:hidden w-full h-[2px] bg-white/30"></span>
+    <span class="hidden lg:block w-[2px] h-[54px] bg-white/30"></span>
+
+    <div class="flex flex-col items-center gap-1 flex-1 group transition-all duration-300 hover:scale-105">
+        <p class="w-full text-center text-2xl lg:text-3xl font-bold text-white counter" data-target="250">0</p>
+        <p class="w-full text-center text-sm lg:text-base font-normal text-white/90">Program Studi</p>
+    </div>
+
+    <span class="block lg:hidden w-full h-[2px] bg-white/30"></span>
+    <span class="hidden lg:block w-[2px] h-[54px] bg-white/30"></span>
+
+    <div class="flex flex-col items-center gap-1 flex-1 group transition-all duration-300 hover:scale-105">
+        <p class="w-full text-center text-2xl lg:text-3xl font-bold text-white counter" data-target="500">0</p>
+        <p class="w-full text-center text-sm lg:text-base font-normal text-white/90">Prestasi Tercatat</p>
+    </div>
+
+    <span class="block lg:hidden w-full h-[2px] bg-white/30"></span>
+    <span class="hidden lg:block w-[2px] h-[54px] bg-white/30"></span>
+
+    <div class="flex flex-col items-center gap-1 flex-1 group transition-all duration-300 hover:scale-105">
+        <p class="w-full text-center text-2xl lg:text-3xl font-bold text-white counter" data-target="15">0</p>
+        <p class="w-full text-center text-sm lg:text-base font-normal text-white/90">Fakultas</p>
     </div>
 </div>
+
+<script>
+    // Counter animation
+    function animateCounter(element) {
+        const target = parseInt(element.getAttribute('data-target'));
+        const duration = 2000; // 2 seconds
+        const step = target / (duration / 16); // 60fps
+        let current = 0;
+
+        const timer = setInterval(() => {
+            current += step;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(current) + (target >= 1000 ? '+' : '');
+        }, 16);
+    }
+
+    // Initialize counters when stats section is visible
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counters = entry.target.querySelectorAll('.counter');
+                counters.forEach((counter, index) => {
+                    setTimeout(() => {
+                        animateCounter(counter);
+                    }, index * 200);
+                });
+                statsObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.5
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const statsSection = document.querySelector('.observe-animation');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+    });
+</script>

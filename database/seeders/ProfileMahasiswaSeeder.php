@@ -11,9 +11,7 @@ class ProfileMahasiswaSeeder extends Seeder
     {
         DB::table('profil_mahasiswa')->delete();
 
-        // Data profil untuk 20 mahasiswa
         $profilData = [
-            // Mahasiswa Semester 2 (sebagian besar - sedang aktif)
             [
                 'mahasiswa_id' => 1,
                 'semester' => 2, // Semester Genap 2024/2025
@@ -38,7 +36,7 @@ class ProfileMahasiswaSeeder extends Seeder
                 'mahasiswa_id' => 3,
                 'semester' => 2,
                 'ips' => 3.65,
-                'skor_toffle' => 0, // Belum TOEFL
+                'skor_toffle' => 0.5,
                 'pengalaman_organisasi' => 3,
                 'is_active' => true,
                 'file_toefl' => null,
@@ -59,7 +57,7 @@ class ProfileMahasiswaSeeder extends Seeder
                 'semester' => 2,
                 'ips' => 3.55,
                 'skor_toffle' => 475,
-                'pengalaman_organisasi' => 0, // Tidak ikut organisasi
+                'pengalaman_organisasi' => 0.5, // Tidak ikut organisasi
                 'is_active' => true,
                 'file_toefl' => 'toefl_certificate_5.pdf',
                 'file_ska_organisasi' => null,
@@ -124,7 +122,7 @@ class ProfileMahasiswaSeeder extends Seeder
                 'mahasiswa_id' => 11,
                 'semester' => 2,
                 'ips' => 3.60,
-                'skor_toffle' => 0,
+                'skor_toffle' => 0.5,
                 'pengalaman_organisasi' => 1,
                 'is_active' => true,
                 'file_toefl' => null,
@@ -145,7 +143,7 @@ class ProfileMahasiswaSeeder extends Seeder
                 'semester' => 2,
                 'ips' => 3.45,
                 'skor_toffle' => 450,
-                'pengalaman_organisasi' => 0,
+                'pengalaman_organisasi' => 0.5,
                 'is_active' => true,
                 'file_toefl' => 'toefl_certificate_13.pdf',
                 'file_ska_organisasi' => null,
@@ -176,8 +174,8 @@ class ProfileMahasiswaSeeder extends Seeder
                 'mahasiswa_id' => 16,
                 'semester' => 2,
                 'ips' => 2.95, // IPS rendah
-                'skor_toffle' => 0,
-                'pengalaman_organisasi' => 0,
+                'skor_toffle' => 0.5,
+                'pengalaman_organisasi' => 0.5,
                 'is_active' => false, // Tidak aktif
                 'file_toefl' => null,
                 'file_ska_organisasi' => null,
@@ -216,8 +214,8 @@ class ProfileMahasiswaSeeder extends Seeder
                 'mahasiswa_id' => 20,
                 'semester' => 2,
                 'ips' => 3.54,
-                'skor_toffle' => 0,
-                'pengalaman_organisasi' => 0,
+                'skor_toffle' => 0.5,
+                'pengalaman_organisasi' => 0.5,
                 'is_active' => true,
                 'file_toefl' => null,
                 'file_ska_organisasi' => null,

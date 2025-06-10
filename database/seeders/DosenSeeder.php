@@ -13,7 +13,7 @@ class DosenSeeder extends Seeder
         DB::table('dosen')->delete();
 
         $names = [
-            'Dr. Adriano Reginald, M.T.', // admin - ID 1
+            'Adriano Reginald, M.T.', // admin - ID 1
             'Seraphina Calista, S.Kom., M.Kom.',
             'Maximilian Pradipta, S.T., M.T.',
             'Evangeline Adhisty, S.Kom., M.Sc.',
@@ -30,12 +30,10 @@ class DosenSeeder extends Seeder
         foreach ($names as $index => $name) {
             $nidn = (string) ($nidnStart + $index);
 
-            // Extract first name dari nama lengkap (skip gelar Dr./title)
             $nameParts = explode(' ', $name);
             $firstName = '';
 
             foreach ($nameParts as $part) {
-                // Skip gelar dan tanda baca
                 if (!str_contains($part, '.') && !str_contains($part, ',')) {
                     $firstName = strtolower($part);
                     break;

@@ -26,7 +26,6 @@ class MahasiswaSeeder extends Seeder
             $firstName = strtolower(Str::before($name, ' '));
             $email = $firstName . '@student.achieveup.ac.id';
 
-            // Distribusi mahasiswa ke 3 program studi secara merata
             $prodiIndex = ($index % 3) + 1;
 
             DB::table('mahasiswa')->insert([

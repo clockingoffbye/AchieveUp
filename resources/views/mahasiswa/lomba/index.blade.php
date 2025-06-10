@@ -118,116 +118,117 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function() {
-            let lombaData = [];
-            let pengajuanData = [];
-            let lombaCurrentPage = 1;
-            let pengajuanCurrentPage = 1;
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                let lombaData = [];
+                let pengajuanData = [];
+                let lombaCurrentPage = 1;
+                let pengajuanCurrentPage = 1;
 
-            function getStatusConfig(status) {
-                const config = {
-                    'approved': {
-                        bgClass: 'bg-green-100',
-                        textClass: 'text-green-800',
-                        icon: 'fas fa-check-circle text-green-500'
-                    },
-                    'rejected': {
-                        bgClass: 'bg-red-100',
-                        textClass: 'text-red-800',
-                        icon: 'fas fa-times-circle text-red-500'
-                    },
-                    'pending': {
-                        bgClass: 'bg-gray-200',
-                        textClass: 'text-gray-800',
-                        icon: 'fas fa-hourglass-half text-gray-500'
-                    }
-                };
+                function getStatusConfig(status) {
+                    const config = {
+                        'approved': {
+                            bgClass: 'bg-green-100',
+                            textClass: 'text-green-800',
+                            icon: 'fas fa-check-circle text-green-500'
+                        },
+                        'rejected': {
+                            bgClass: 'bg-red-100',
+                            textClass: 'text-red-800',
+                            icon: 'fas fa-times-circle text-red-500'
+                        },
+                        'pending': {
+                            bgClass: 'bg-gray-200',
+                            textClass: 'text-gray-800',
+                            icon: 'fas fa-hourglass-half text-gray-500'
+                        }
+                    };
 
-                return config[status] || config.pending;
-            }
+                    return config[status] || config.pending;
+                }
 
-            function getTingkatConfig(tingkat) {
-                const config = {
-                    'internasional': {
-                        bgClass: 'bg-purple-100',
-                        textClass: 'text-purple-800'
-                    },
-                    'nasional': {
-                        bgClass: 'bg-blue-100',
-                        textClass: 'text-blue-800'
-                    },
-                    'regional': {
-                        bgClass: 'bg-green-100',
-                        textClass: 'text-green-800'
-                    },
-                    'lokal': {
-                        bgClass: 'bg-yellow-100',
-                        textClass: 'text-yellow-800'
-                    }
-                };
+                function getTingkatConfig(tingkat) {
+                    const config = {
+                        'internasional': {
+                            bgClass: 'bg-purple-100',
+                            textClass: 'text-purple-800'
+                        },
+                        'nasional': {
+                            bgClass: 'bg-blue-100',
+                            textClass: 'text-blue-800'
+                        },
+                        'regional': {
+                            bgClass: 'bg-green-100',
+                            textClass: 'text-green-800'
+                        },
+                        'lokal': {
+                            bgClass: 'bg-yellow-100',
+                            textClass: 'text-yellow-800'
+                        }
+                    };
 
-                return config[tingkat.toLowerCase()] || {
-                    bgClass: 'bg-gray-100',
-                    textClass: 'text-gray-800'
-                };
-            }
+                    return config[tingkat.toLowerCase()] || {
+                        bgClass: 'bg-gray-100',
+                        textClass: 'text-gray-800'
+                    };
+                }
 
-            function actionButtonsLomba(id) {
-                return `
+                function actionButtonsLomba(id) {
+                    return `
                     <div class="flex items-center gap-3">
                         <a href="/mahasiswa/lomba/${id}" class="action-btn text-blue-600 hover:text-blue-800" title="Detail">
                             <i class="fas fa-eye"></i>
                         </a>
                     </div>
                 `;
-            }
+                }
 
-            function actionButtonsPengajuan(id, status) {
-                let buttons = `
+                function actionButtonsPengajuan(id, status) {
+                    let buttons = `
                 <div class="flex items-center gap-3">
                     <a href="/mahasiswa/lomba/pengajuan/${id}" class="action-btn text-blue-600 hover:text-blue-800" title="Detail">
                         <i class="fas fa-eye"></i>
                     </a>
             `;
 
-                if (status === 'pending') {
-                    buttons += `
+                    if (status === 'pending') {
+                        buttons += `
                     <button type="button" class="action-btn text-red-600 hover:text-red-800 btn-hapus" data-id="${id}" data-type="pengajuan-lomba" title="Hapus">
                         <i class="fas fa-trash"></i>
                     </button>
                 `;
-                } else if (status === 'rejected') {
-                    buttons += `
+                    } else if (status === 'rejected') {
+                        buttons += `
                     <a href="/mahasiswa/pengajuan-lomba/${id}/edit" class="action-btn text-amber-600 hover:text-amber-800" title="Edit">
                         <i class="fas fa-edit"></i>
                     </a>
                 `;
+                    }
+
+                    buttons += `</div>`;
+                    return buttons;
                 }
 
-                buttons += `</div>`;
-                return buttons;
-            }
+                function renderLombaTable() {
+                    let searchQuery = $('#search-bar').val().toLowerCase();
+                    let entriesToShow = parseInt($('#show-entry').val());
+                    let tbody = $('#table_lomba tbody');
 
-            function renderLombaTable() {
-                let searchQuery = $('#search-bar').val().toLowerCase();
-                let entriesToShow = parseInt($('#show-entry').val());
-                let tbody = $('#table_lomba tbody');
+                    let filtered = lombaData.filter(item =>
+                        Object.values(item).some(val => val && typeof val === 'string' && val.toLowerCase()
+                            .includes(searchQuery))
+                    );
 
-                let filtered = lombaData.filter(item =>
-                    Object.values(item).some(val => val && typeof val === 'string' && val.toLowerCase()
-                        .includes(searchQuery))
-                );
+                    let totalData = filtered.length;
+                    let totalPages = Math.ceil(totalData / entriesToShow);
 
-                let totalData = filtered.length;
-                let totalPages = Math.ceil(totalData / entriesToShow);
+                    let startIndex = (lombaCurrentPage - 1) * entriesToShow;
+                    let paginated = filtered.slice(startIndex, startIndex + entriesToShow);
 
-                let startIndex = (lombaCurrentPage - 1) * entriesToShow;
-                let paginated = filtered.slice(startIndex, startIndex + entriesToShow);
-
-                tbody.empty();
-                if (totalData === 0) {
-                    tbody.append(`
+                    tbody.empty();
+                    if (totalData === 0) {
+                        tbody.append(`
                         <tr>
                             <td colspan="6" class="px-6 py-8 text-center text-gray-500">
                                 <div class="flex flex-col items-center justify-center">
@@ -237,11 +238,11 @@
                             </td>
                         </tr>
                     `);
-                } else {
-                    $.each(paginated, function(index, item) {
-                        const tingkatConfig = getTingkatConfig(item.tingkat);
+                    } else {
+                        $.each(paginated, function(index, item) {
+                            const tingkatConfig = getTingkatConfig(item.tingkat);
 
-                        let row = `
+                            let row = `
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">${item.judul}</td>
                                 <td class="px-6 py-4 text-sm">
@@ -253,9 +254,9 @@
                                 <td class="px-6 py-4 text-sm">
                                     ${item.link ? 
                                       `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline flex items-center gap-1">
-                                                                                                                <span class="truncate max-w-[150px]">${item.link}</span>
-                                                                                                                <i class="fas fa-external-link-alt text-xs"></i>
-                                                                                                              </a>` : 
+                                                                                                                                                        <span class="truncate max-w-[150px]">${item.link}</span>
+                                                                                                                                                        <i class="fas fa-external-link-alt text-xs"></i>
+                                                                                                                                                      </a>` : 
                                       '<span class="text-gray-400">-</span>'}
                                 </td>
                                 <td class="px-6 py-4 text-sm">
@@ -270,52 +271,52 @@
                                 </td>
                             </tr>
                         `;
-                        tbody.append(row);
-                    });
-                }
+                            tbody.append(row);
+                        });
+                    }
 
-                $("#lomba_info").text(`Menampilkan ${paginated.length} dari ${totalData} data lomba`);
+                    $("#lomba_info").text(`Menampilkan ${paginated.length} dari ${totalData} data lomba`);
 
-                let paginationHtml = '';
-                if (totalPages > 1) {
-                    for (let i = 1; i <= totalPages; i++) {
-                        paginationHtml += `
+                    let paginationHtml = '';
+                    if (totalPages > 1) {
+                        for (let i = 1; i <= totalPages; i++) {
+                            paginationHtml += `
                             <button class="px-3 py-1.5 rounded text-sm font-medium transition-colors duration-200
                                 ${i === lombaCurrentPage ? 'bg-[#6041CE] text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'} 
                                 page-btn-lomba" data-page="${i}">${i}
                             </button>
                         `;
+                        }
                     }
+
+                    $("#lomba_pagination").html(paginationHtml);
+
+                    $(".page-btn-lomba").off("click").on("click", function() {
+                        lombaCurrentPage = parseInt($(this).data("page"));
+                        renderLombaTable();
+                    });
                 }
 
-                $("#lomba_pagination").html(paginationHtml);
+                function renderPengajuanTable() {
+                    let searchQuery = $('#search-bar').val().toLowerCase();
+                    let entriesToShow = parseInt($('#show-entry').val());
+                    let tbody = $('#table_pengajuan tbody');
 
-                $(".page-btn-lomba").off("click").on("click", function() {
-                    lombaCurrentPage = parseInt($(this).data("page"));
-                    renderLombaTable();
-                });
-            }
+                    let filtered = Array.isArray(pengajuanData) ? pengajuanData.filter(item =>
+                        (item.status === 'pending' || item.status === 'rejected') &&
+                        Object.values(item).some(val => val && typeof val === 'string' && val.toLowerCase()
+                            .includes(searchQuery))
+                    ) : [];
 
-            function renderPengajuanTable() {
-                let searchQuery = $('#search-bar').val().toLowerCase();
-                let entriesToShow = parseInt($('#show-entry').val());
-                let tbody = $('#table_pengajuan tbody');
+                    let totalData = filtered.length;
+                    let totalPages = Math.ceil(totalData / entriesToShow);
 
-                let filtered = Array.isArray(pengajuanData) ? pengajuanData.filter(item =>
-                    (item.status === 'pending' || item.status === 'rejected') &&
-                    Object.values(item).some(val => val && typeof val === 'string' && val.toLowerCase()
-                        .includes(searchQuery))
-                ) : [];
+                    let startIndex = (pengajuanCurrentPage - 1) * entriesToShow;
+                    let paginated = filtered.slice(startIndex, startIndex + entriesToShow);
 
-                let totalData = filtered.length;
-                let totalPages = Math.ceil(totalData / entriesToShow);
-
-                let startIndex = (pengajuanCurrentPage - 1) * entriesToShow;
-                let paginated = filtered.slice(startIndex, startIndex + entriesToShow);
-
-                tbody.empty();
-                if (totalData === 0) {
-                    tbody.append(`
+                    tbody.empty();
+                    if (totalData === 0) {
+                        tbody.append(`
                         <tr>
                             <td colspan="7" class="px-6 py-8 text-center text-gray-500">
                                 <div class="flex flex-col items-center justify-center">
@@ -325,12 +326,12 @@
                             </td>
                         </tr>
                     `);
-                } else {
-                    $.each(paginated, function(index, item) {
-                        const tingkatConfig = getTingkatConfig(item.tingkat);
-                        const statusConfig = getStatusConfig(item.status);
+                    } else {
+                        $.each(paginated, function(index, item) {
+                            const tingkatConfig = getTingkatConfig(item.tingkat);
+                            const statusConfig = getStatusConfig(item.status);
 
-                        let row = `
+                            let row = `
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">${item.judul}</td>
                                 <td class="px-6 py-4 text-sm">
@@ -357,159 +358,160 @@
                                 </td>
                             </tr>
                         `;
-                        tbody.append(row);
-                    });
-                }
+                            tbody.append(row);
+                        });
+                    }
 
-                $("#pengajuan_info").text(`Menampilkan ${paginated.length} dari ${totalData} data pengajuan`);
+                    $("#pengajuan_info").text(`Menampilkan ${paginated.length} dari ${totalData} data pengajuan`);
 
-                let paginationHtml = '';
-                if (totalPages > 1) {
-                    for (let i = 1; i <= totalPages; i++) {
-                        paginationHtml += `
+                    let paginationHtml = '';
+                    if (totalPages > 1) {
+                        for (let i = 1; i <= totalPages; i++) {
+                            paginationHtml += `
                             <button class="px-3 py-1.5 rounded text-sm font-medium transition-colors duration-200
                                 ${i === pengajuanCurrentPage ? 'bg-[#6041CE] text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'} 
                                 page-btn-pengajuan" data-page="${i}">${i}
                             </button>
                         `;
+                        }
                     }
+
+                    $("#pengajuan_pagination").html(paginationHtml);
+
+                    $(".page-btn-pengajuan").off("click").on("click", function() {
+                        pengajuanCurrentPage = parseInt($(this).data("page"));
+                        renderPengajuanTable();
+                    });
                 }
 
-                $("#pengajuan_pagination").html(paginationHtml);
-
-                $(".page-btn-pengajuan").off("click").on("click", function() {
-                    pengajuanCurrentPage = parseInt($(this).data("page"));
-                    renderPengajuanTable();
-                });
-            }
-
-            function loadLomba() {
-                $.ajax({
-                    url: '/mahasiswa/lomba/getall',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        lombaData = Array.isArray(response) ? response : [];
-                        lombaCurrentPage = 1;
-                        renderLombaTable();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error loading lomba:', status, error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal!',
-                            text: 'Gagal memuat data lomba.',
-                            timer: 2000
-                        });
-                        lombaData = [];
-                        renderLombaTable();
-                    }
-                });
-            }
-
-            function loadPengajuan() {
-                $.ajax({
-                    url: '/mahasiswa/lomba/getpengajuan',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        pengajuanData = Array.isArray(response.data) ? response.data : [];
-                        pengajuanCurrentPage = 1;
-                        renderPengajuanTable();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error loading pengajuan:', status, error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal!',
-                            text: 'Gagal memuat data pengajuan lomba.',
-                            timer: 2000
-                        });
-                        pengajuanData = [];
-                        renderPengajuanTable();
-                    }
-                });
-            }
-
-            $(document).on('click', '.btn-hapus', function() {
-                const id = $(this).data('id');
-                const type = $(this).data('type');
-                if (type === 'pengajuan-lomba') {
-                    Swal.fire({
-                        title: 'Yakin ingin menghapus?',
-                        text: "Data pengajuan yang dihapus tidak dapat dikembalikan.",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#aaa',
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $.ajax({
-                                url: `/mahasiswa/lomba/${id}`,
-                                type: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                        'content')
-                                },
-                                success: function(res) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Berhasil!',
-                                        text: 'Pengajuan berhasil dihapus.',
-                                        timer: 1500,
-                                        showConfirmButton: false
-                                    });
-                                    loadPengajuan();
-                                },
-                                error: function(xhr) {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Gagal!',
-                                        text: 'Terjadi kesalahan saat menghapus pengajuan.',
-                                    });
-                                }
+                function loadLomba() {
+                    $.ajax({
+                        url: '/mahasiswa/lomba/getall',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            lombaData = Array.isArray(response) ? response : [];
+                            lombaCurrentPage = 1;
+                            renderLombaTable();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error loading lomba:', status, error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: 'Gagal memuat data lomba.',
+                                timer: 2000
                             });
+                            lombaData = [];
+                            renderLombaTable();
                         }
                     });
                 }
-            });
 
-            $('#search-bar').on('input', function() {
-                lombaCurrentPage = 1;
-                pengajuanCurrentPage = 1;
-                renderLombaTable();
-                renderPengajuanTable();
-            });
-
-            $('#show-entry').on('change', function() {
-                lombaCurrentPage = 1;
-                pengajuanCurrentPage = 1;
-                renderLombaTable();
-                renderPengajuanTable();
-            });
-
-            document.addEventListener('alpine:initialized', () => {
-                const alpineComponent = Alpine.getComponent(document.querySelector('[x-data]'));
-                if (alpineComponent) {
-                    Alpine.effect(() => {
-                        const currentTab = alpineComponent.activeTab;
-                        if (currentTab === 'lomba') {
-                            renderLombaTable();
-                        } else if (currentTab === 'pengajuan') {
+                function loadPengajuan() {
+                    $.ajax({
+                        url: '/mahasiswa/lomba/getpengajuan',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            pengajuanData = Array.isArray(response.data) ? response.data : [];
+                            pengajuanCurrentPage = 1;
+                            renderPengajuanTable();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error loading pengajuan:', status, error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: 'Gagal memuat data pengajuan lomba.',
+                                timer: 2000
+                            });
+                            pengajuanData = [];
                             renderPengajuanTable();
                         }
                     });
                 }
-            });
 
-            window.loadLomba = loadLomba;
-            window.loadPengajuan = loadPengajuan;
-            loadLomba();
-            loadPengajuan();
-        });
-    </script>
+                $(document).on('click', '.btn-hapus', function() {
+                    const id = $(this).data('id');
+                    const type = $(this).data('type');
+                    if (type === 'pengajuan-lomba') {
+                        Swal.fire({
+                            title: 'Yakin ingin menghapus?',
+                            text: "Data pengajuan yang dihapus tidak dapat dikembalikan.",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#aaa',
+                            confirmButtonText: 'Ya, hapus!',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                    url: `/mahasiswa/lomba/${id}`,
+                                    type: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                            'content')
+                                    },
+                                    success: function(res) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Berhasil!',
+                                            text: 'Pengajuan berhasil dihapus.',
+                                            timer: 1500,
+                                            showConfirmButton: false
+                                        });
+                                        loadPengajuan();
+                                    },
+                                    error: function(xhr) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Gagal!',
+                                            text: 'Terjadi kesalahan saat menghapus pengajuan.',
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
+                $('#search-bar').on('input', function() {
+                    lombaCurrentPage = 1;
+                    pengajuanCurrentPage = 1;
+                    renderLombaTable();
+                    renderPengajuanTable();
+                });
+
+                $('#show-entry').on('change', function() {
+                    lombaCurrentPage = 1;
+                    pengajuanCurrentPage = 1;
+                    renderLombaTable();
+                    renderPengajuanTable();
+                });
+
+                document.addEventListener('alpine:initialized', () => {
+                    const alpineComponent = Alpine.getComponent(document.querySelector('[x-data]'));
+                    if (alpineComponent) {
+                        Alpine.effect(() => {
+                            const currentTab = alpineComponent.activeTab;
+                            if (currentTab === 'lomba') {
+                                renderLombaTable();
+                            } else if (currentTab === 'pengajuan') {
+                                renderPengajuanTable();
+                            }
+                        });
+                    }
+                });
+
+                window.loadLomba = loadLomba;
+                window.loadPengajuan = loadPengajuan;
+                loadLomba();
+                loadPengajuan();
+            });
+        </script>
+    @endpush
 
     <style>
         .action-btn {

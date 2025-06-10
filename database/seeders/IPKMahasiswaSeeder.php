@@ -11,13 +11,10 @@ class IPKMahasiswaSeeder extends Seeder
     {
         DB::table('ipk_mahasiswa')->delete();
 
-        // Data IPS per semester untuk setiap mahasiswa
         $ipkData = [];
 
-        // Mahasiswa semester 2 (punya data semester 1 dan 2)
         $mahasiswaSemester2 = [1, 2, 3, 4, 5, 11, 13, 16, 18, 20];
         foreach ($mahasiswaSemester2 as $mahasiswaId) {
-            // Semester 1 (2025-1 - Ganjil 2024/2025)
             $ipkData[] = [
                 'mahasiswa_id' => $mahasiswaId,
                 'periode_id' => 4, // 2025-1 (Ganjil 2024/2025)
@@ -26,7 +23,6 @@ class IPKMahasiswaSeeder extends Seeder
                 'updated_at' => now()->subMonths(6),
             ];
 
-            // Semester 2 (2025-2 - Genap 2024/2025) - Current
             $ipkData[] = [
                 'mahasiswa_id' => $mahasiswaId,
                 'periode_id' => 5, // 2025-2 (Genap 2024/2025)
@@ -36,7 +32,6 @@ class IPKMahasiswaSeeder extends Seeder
             ];
         }
 
-        // Mahasiswa semester 4 (punya data 4 semester)
         $mahasiswaSemester4 = [6, 7, 8, 12, 15, 17];
         foreach ($mahasiswaSemester4 as $mahasiswaId) {
             $periods = [2, 3, 4, 5]; // 2023-2, 2024-1, 2025-1, 2025-2
@@ -52,13 +47,12 @@ class IPKMahasiswaSeeder extends Seeder
             }
         }
 
-        // Mahasiswa semester 6 (punya data 6 semester)
         $mahasiswaSemester6 = [9, 10, 14, 19];
         foreach ($mahasiswaSemester6 as $mahasiswaId) {
-            $periods = [1, 2, 3, 4, 5, 6]; // Semua periode (jika ada)
+            $periods = [1, 2, 3, 4, 5, 6]; 
 
             foreach ($periods as $index => $periodeId) {
-                if ($periodeId <= 5) { // Hanya sampai periode yang ada
+                if ($periodeId <= 5) { 
                     $ipkData[] = [
                         'mahasiswa_id' => $mahasiswaId,
                         'periode_id' => $periodeId,

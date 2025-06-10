@@ -6,26 +6,20 @@ use App\Models\Mahasiswa;
 
 class Entrophy
 {
+    // Konstanta untuk nilai minimum dan presisi
+    private const MIN_VALUE = 0.001;
+    private const PRECISION = 6;
 
     public function getDataMahasiswa()
-    {
-        // $mahasiswa = Mahasiswa::with([
-        //     'prestasi' => function ($q) {
-        //         $q->where('tanggal_selesai', '>=', now()->subMonths(6));
-        //     },
-        //     'profil',
-        // ])->get();
-
+    { 
         $mahasiswa = Mahasiswa::with([
             'prestasi' => function ($q) {
                 $q->where('tanggal_selesai', '>=', now()->subMonths(6));
             },
             'profil',
         ])
-            ->limit(10) // ambil 10 data mahasiswa saja
+            ->limit(10) 
             ->get();
-
-        // dd($mahasiswa);
 
         return $mahasiswa;
     }
@@ -151,10 +145,6 @@ class Entrophy
 
             // Hitung hanya jika ada prestasi
             foreach ($mhs->prestasi as $prestasi) {
-                $type = $prestasi->is_akademik ? 'akademik' : 'nonakademik';
-                $bobot = $prestasi->is_akademik ? 0.1 : 0.05;
-                $key = $prestasi->tingkat . '_' . $type;
-
                 $tingkatMap = [
                     'internasional' => 'internasional',
                     'nasional' => 'nasional',
@@ -176,7 +166,9 @@ class Entrophy
                 $totals[$prestasi->tingkat] += $bobot;
                 $totals['score'] += $bobot;
             }
-            $totalScoreValue = $totals['score'] == 0 ? 0.01 : $totals['score'];
+
+            // Pastikan totalScore tidak 0 dengan nilai minimum
+            $totalScoreValue = max($totals['score'], self::MIN_VALUE);
 
             // Masukkan data mahasiswa (DENGAN atau TANPA prestasi)
             $data[] = [
@@ -239,16 +231,10 @@ class Entrophy
         ];
 
         foreach ($mahasiswa as $index => $mhs) {
-            // Hitung bobot ipk
+            // Hitung bobot dengan perbaikan
             $bobotIPK = $this->hitungBobotIPK($mhs->profil->ips ?? 0);
-
-            // Hitung bobot bahasa Inggris
             $bobotToefl = $this->hitungBobotToefl($mhs->profil->skor_toffle ?? 0);
-
-            // Hitung bobot organisasi
             $bobotOrganisasi = $this->hitungBobotOrganisasi($mhs->profil->pengalaman_organisasi ?? 0);
-
-            // Hitung bobot semester
             $bobotSemester = $this->hitungBobotSemester($mhs->profil->semester ?? 1);
 
             // Hitung prestasi kemenangan dan total skor
@@ -274,7 +260,10 @@ class Entrophy
                     }
                 }
             }
-            $prestasiKemenanganValue = $totalSkorPrestasi == 0 ? 0.1 : $totalSkorPrestasi;
+
+            // Pastikan nilai minimum untuk prestasi kemenangan dan jumlah lomba
+            $prestasiKemenanganValue = max($totalSkorPrestasi, self::MIN_VALUE);
+            $jumlahLombaValue = max($scoreLombaMap[$mhs->nim] ?? 0, self::MIN_VALUE);
 
             // Format output
             $dataAlternatif[] = [
@@ -282,7 +271,7 @@ class Entrophy
                 'nama' => $mhs->nama,
                 'nim' => $mhs->nim,
                 'ipk' => $bobotIPK,
-                'jumlah_lomba' => $scoreLombaMap[$mhs->nim] ?? 0,
+                'jumlah_lomba' => $jumlahLombaValue,
                 'pengalaman_organisasi' => $bobotOrganisasi,
                 'skor_bahasa_inggris' => $bobotToefl,
                 'prestasi_kemenangan' => $prestasiKemenanganValue,
@@ -298,46 +287,45 @@ class Entrophy
         if ($ipk >= 3.5) {
             return 5;
         }
-
         if ($ipk > 2.5) {
             return 4;
         }
-
         if ($ipk > 1.5) {
             return 3;
         }
-
         return 2;
     }
 
     protected function hitungBobotToefl($skor)
     {
-        if ($skor >= 850) {
+        // Perbaikan: tangani nilai yang sangat kecil
+        if ($skor <= 1) { 
+            return 1; // Nilai minimum
+        }
+        if ($skor >= 550) {
             return 5;
         }
-
-        if ($skor >= 650) {
+        if ($skor >= 500) {
             return 4;
         }
-
         if ($skor >= 450) {
             return 3;
         }
-
         return 2;
     }
 
     protected function hitungBobotOrganisasi($pengalaman)
     {
+        if ($pengalaman <= 0.) { 
+            return 1; 
+        }
         if ($pengalaman > 3) {
             return 5;
         }
-
         if ($pengalaman >= 1) {
             return 3;
         }
-
-        return 1;
+        return 2;
     }
 
     protected function hitungBobotSemester($semester)
@@ -345,24 +333,19 @@ class Entrophy
         if ($semester >= 7) {
             return 2;
         }
-
         if ($semester >= 5) {
             return 3;
         }
-
         if ($semester >= 3) {
             return 4;
         }
-
         return 5;
     }
 
     public function getNormalisasi()
     {
         $alternatifs = $this->getDataAlternatif();
-
         $maxMinValues = $this->getMaxMin();
-
         $matriksNormalisasi = [];
 
         foreach ($alternatifs as $alt) {
@@ -419,18 +402,27 @@ class Entrophy
 
     protected function normalisasiBenefit($value, $max)
     {
-        return $max != 0 ? round($value / $max, 4) : 0;
+        if ($max <= 0) {
+            return self::MIN_VALUE;
+        }
+
+        $result = $value / $max;
+        return max($result, self::MIN_VALUE); // Pastikan tidak 0
     }
 
     protected function normalisasiCost($value, $min)
     {
-        return $value != 0 ? round($min / $value, 4) : 0;
+        if ($value <= 0 || $min <= 0) {
+            return self::MIN_VALUE;
+        }
+
+        $result = $min / $value;
+        return max($result, self::MIN_VALUE); // Pastikan tidak 0
     }
 
     public function getTotalKriteria()
     {
         $normalisasi = $this->getNormalisasi();
-        $matriks = $normalisasi;
 
         $totalKriteria = [
             'ipk' => 0,
@@ -441,7 +433,7 @@ class Entrophy
             'semester' => 0,
         ];
 
-        foreach ($matriks as $row) {
+        foreach ($normalisasi as $row) {
             $totalKriteria['ipk'] += $row['ipk'];
             $totalKriteria['jumlah_lomba'] += $row['jumlah_lomba'];
             $totalKriteria['pengalaman_organisasi'] += $row['pengalaman_organisasi'];
@@ -450,29 +442,24 @@ class Entrophy
             $totalKriteria['semester'] += $row['semester'];
         }
 
-        $data = [
-            'ipk' => round($totalKriteria['ipk'], 3),
-            'jumlah_lomba' => round($totalKriteria['jumlah_lomba'], 3),
-            'pengalaman_organisasi' => round($totalKriteria['pengalaman_organisasi'], 3),
-            'skor_bahasa_inggris' => round($totalKriteria['skor_bahasa_inggris'], 3),
-            'prestasi_kemenangan' => round($totalKriteria['prestasi_kemenangan'], 3),
-            'semester' => round($totalKriteria['semester'], 3),
+        return [
+            'ipk' => round($totalKriteria['ipk'], self::PRECISION),
+            'jumlah_lomba' => round($totalKriteria['jumlah_lomba'], self::PRECISION),
+            'pengalaman_organisasi' => round($totalKriteria['pengalaman_organisasi'], self::PRECISION),
+            'skor_bahasa_inggris' => round($totalKriteria['skor_bahasa_inggris'], self::PRECISION),
+            'prestasi_kemenangan' => round($totalKriteria['prestasi_kemenangan'], self::PRECISION),
+            'semester' => round($totalKriteria['semester'], self::PRECISION),
         ];
-
-        return $data;
     }
 
     public function getNilaiProporsional()
     {
-        // 1. Dapatkan matriks normalisasi dan total kriteria
         $normalisasi = $this->getNormalisasi();
-        $matriks = $normalisasi;
         $totalKriteria = $this->getTotalKriteria();
 
-        // 2. Hitung nilai proporsional
         $hasil = [];
 
-        foreach ($matriks as $row) {
+        foreach ($normalisasi as $row) {
             $hasil[] = [
                 'alternatif' => $row['alternatif'],
                 'nama' => $row['nama'],
@@ -490,17 +477,20 @@ class Entrophy
 
     protected function hitungProporsi($nilai, $total)
     {
-        return $total != 0 ? round($nilai / $total, 4) : 0;
+        if ($total <= 0) {
+            return self::MIN_VALUE;
+        }
+
+        $result = $nilai / $total;
+        return max($result, self::MIN_VALUE); // Pastikan tidak 0
     }
 
     public function getNilaiLn()
     {
         $proporsional = $this->getNilaiProporsional();
-        $dataProporsional = $proporsional;
-
         $matriksLn = [];
 
-        foreach ($dataProporsional as $row) {
+        foreach ($proporsional as $row) {
             $matriksLn[] = [
                 'alternatif' => $row['alternatif'],
                 'nama' => $row['nama'],
@@ -518,11 +508,9 @@ class Entrophy
 
     protected function hitungLn($nilai)
     {
-        if ($nilai <= 0) {
-            return 0;
-        }
-
-        return round(log($nilai), 3);
+        // Pastikan nilai tidak 0 atau negatif
+        $nilai = max($nilai, self::MIN_VALUE);
+        return round(log($nilai), self::PRECISION);
     }
 
     public function getNilaiProporsionalKaliLn()
@@ -536,12 +524,12 @@ class Entrophy
             $hasil[] = [
                 'alternatif' => $row['alternatif'],
                 'nama' => $row['nama'],
-                'ipk' => round($row['ipk'] * $nilaiProporsional[$index]['ipk'], 4),
-                'jumlah_lomba' => round($row['jumlah_lomba'] * $nilaiProporsional[$index]['jumlah_lomba'], 4),
-                'pengalaman_organisasi' => round($row['pengalaman_organisasi'] * $nilaiProporsional[$index]['pengalaman_organisasi'], 4),
-                'skor_bahasa_inggris' => round($row['skor_bahasa_inggris'] * $nilaiProporsional[$index]['skor_bahasa_inggris'], 4),
-                'prestasi_kemenangan' => round($row['prestasi_kemenangan'] * $nilaiProporsional[$index]['prestasi_kemenangan'], 4),
-                'semester' => round($row['semester'] * $nilaiProporsional[$index]['semester'], 4),
+                'ipk' => round($row['ipk'] * $nilaiProporsional[$index]['ipk'], self::PRECISION),
+                'jumlah_lomba' => round($row['jumlah_lomba'] * $nilaiProporsional[$index]['jumlah_lomba'], self::PRECISION),
+                'pengalaman_organisasi' => round($row['pengalaman_organisasi'] * $nilaiProporsional[$index]['pengalaman_organisasi'], self::PRECISION),
+                'skor_bahasa_inggris' => round($row['skor_bahasa_inggris'] * $nilaiProporsional[$index]['skor_bahasa_inggris'], self::PRECISION),
+                'prestasi_kemenangan' => round($row['prestasi_kemenangan'] * $nilaiProporsional[$index]['prestasi_kemenangan'], self::PRECISION),
+                'semester' => round($row['semester'] * $nilaiProporsional[$index]['semester'], self::PRECISION),
             ];
         }
 
@@ -559,6 +547,7 @@ class Entrophy
             'prestasi_kemenangan' => 0,
             'semester' => 0,
         ];
+
         foreach ($matriksLn as $row) {
             $total['ipk'] += $row['ipk'];
             $total['jumlah_lomba'] += $row['jumlah_lomba'];
@@ -567,25 +556,31 @@ class Entrophy
             $total['prestasi_kemenangan'] += $row['prestasi_kemenangan'];
             $total['semester'] += $row['semester'];
         }
+
         return $total;
     }
 
     public function getNilaiEj()
     {
         $jumlahAlternatif = count($this->getDataAlternatif());
-        $nilai = round(-1 / log($jumlahAlternatif), 4);
+        $nilai = round(-1 / log($jumlahAlternatif), self::PRECISION);
         return $nilai;
     }
 
     public function getNilaiEntrophy()
     {
-        $matriksLn = $this->getTotalPLn();
+        $totalPLn = $this->getTotalPLn();
         $nilaiEj = $this->getNilaiEj();
-        $hasil = [];
-        $counter = 1;
-        foreach ($matriksLn as $key => $value) {
-            $hasil['E' . $counter++] = round($value * $nilaiEj, 4);
-        }
+
+        $hasil = [
+            'E1' => round($totalPLn['ipk'] * $nilaiEj, self::PRECISION),
+            'E2' => round($totalPLn['jumlah_lomba'] * $nilaiEj, self::PRECISION),
+            'E3' => round($totalPLn['pengalaman_organisasi'] * $nilaiEj, self::PRECISION),
+            'E4' => round($totalPLn['skor_bahasa_inggris'] * $nilaiEj, self::PRECISION),
+            'E5' => round($totalPLn['prestasi_kemenangan'] * $nilaiEj, self::PRECISION),
+            'E6' => round($totalPLn['semester'] * $nilaiEj, self::PRECISION),
+        ];
+
         return $hasil;
     }
 
@@ -594,9 +589,14 @@ class Entrophy
         $matriksEntrophy = $this->getNilaiEntrophy();
         $hasil = [];
         $counter = 1;
+
         foreach ($matriksEntrophy as $key => $value) {
-            $hasil['D' . $counter++] = round(1 - $value, 4);
+            $dispersi = 1 - $value;
+            // Pastikan dispersi tidak negatif
+            $dispersi = max($dispersi, self::MIN_VALUE);
+            $hasil['D' . $counter++] = round($dispersi, self::PRECISION);
         }
+
         return $hasil;
     }
 
@@ -607,37 +607,69 @@ class Entrophy
         foreach ($nilaiDispersi as $value) {
             $total += $value;
         }
-        return $total;
+        return round($total, self::PRECISION);
     }
 
     public function getBobotKriteria()
     {
         $totalNilaiDispersi = $this->getTotalNilaiDispersi();
         $nilaiDispersi = $this->getNilaiDispersi();
+
+        // Validasi
+        if ($totalNilaiDispersi <= 0) {
+            throw new \Exception("Total nilai dispersi tidak valid: " . $totalNilaiDispersi);
+        }
+
         $hasil = [];
         $counter = 1;
-        $totalBobot = 0;
+
         foreach ($nilaiDispersi as $value) {
-            $hasil['W' . $counter++] = round($value / $totalNilaiDispersi, 4);
+            $bobot = $value / $totalNilaiDispersi;
+            // Pastikan bobot tidak negatif dan tidak 0
+            $bobot = max($bobot, self::MIN_VALUE);
+            $hasil['W' . $counter++] = round($bobot, self::PRECISION);
         }
-        foreach ($hasil as $bobot) {
-            $totalBobot += $bobot;
+
+        // Normalisasi ulang untuk memastikan total = 1
+        $totalBobot = array_sum($hasil);
+        if ($totalBobot > 0) {
+            foreach ($hasil as $key => $value) {
+                $hasil[$key] = round($value / $totalBobot, self::PRECISION);
+            }
+            $totalBobot = 1.0;
         }
 
         $data = [
-            'ipk' => $hasil['W1'],
-            'jumlah_lomba' => $hasil['W2'],
-            'pengalaman_organisasi' => $hasil['W3'],
-            'skor_bahasa_inggris' => $hasil['W4'],
-            'prestasi_kemenangan' => $hasil['W5'],
-            'semester' => $hasil['W6'],
+            'ipk' => $hasil['W1'] ?? self::MIN_VALUE,
+            'jumlah_lomba' => $hasil['W2'] ?? self::MIN_VALUE,
+            'pengalaman_organisasi' => $hasil['W3'] ?? self::MIN_VALUE,
+            'skor_bahasa_inggris' => $hasil['W4'] ?? self::MIN_VALUE,
+            'prestasi_kemenangan' => $hasil['W5'] ?? self::MIN_VALUE,
+            'semester' => $hasil['W6'] ?? self::MIN_VALUE,
         ];
 
         return [
             'bobot_kriteria' => $hasil,
-            'total_bobot' => round($totalBobot, 4),
+            'total_bobot' => round($totalBobot, self::PRECISION),
             'data_bobot' => $data,
-            'total_nilai_dispers' => round($totalNilaiDispersi, 4),
+            'total_nilai_dispers' => round($totalNilaiDispersi, self::PRECISION),
+        ];
+    }
+
+    // Method untuk debugging
+    public function debugData()
+    {
+        $alternatif = $this->getDataAlternatif();
+        $normalisasi = $this->getNormalisasi();
+        $proporsi = $this->getNilaiProporsional();
+
+        return [
+            'raw_data' => $alternatif,
+            'after_normalization' => $normalisasi,
+            'proportional_values' => $proporsi,
+            'min_max_values' => $this->getMaxMin(),
+            'entropy_values' => $this->getNilaiEntrophy(),
+            'dispersi_values' => $this->getNilaiDispersi(),
         ];
     }
 }

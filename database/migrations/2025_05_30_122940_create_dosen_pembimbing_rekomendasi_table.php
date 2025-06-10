@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('rekomendasi_lomba_id')->required();
             $table->unsignedBigInteger('dosen_id')->required();
             $table->boolean('is_accepted')->default(false);
-            $table->string('note', 100)->nullable();
-            $table->timestamps();   
+            $table->string('note', 200)->nullable();
+            $table->timestamps();
 
             $table->foreign('rekomendasi_lomba_id')->references('id')->on('rekomendasi_lomba')->onDelete('cascade');
             $table->foreign('dosen_id')->references('id')->on('dosen')->onDelete('cascade');

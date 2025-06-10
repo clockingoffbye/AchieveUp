@@ -1,115 +1,216 @@
-<aside class="fixed top-0 left-0 h-screen w-64 bg-white shadow z-100">
-    {{-- Logo --}}
-    <div class="p-4 justify-center flex items-center">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-10 w-auto">
+<aside
+    class="fixed top-0 left-0 h-screen w-64 bg-gradient-to-b from-slate-50 to-white border-r border-slate-200/60 shadow-xl z-30 backdrop-blur-sm transition-transform duration-500 ease-in-out">
+
+    {{-- Mobile Overlay --}}
+    <div x-data="{ sidebarOpen: false }" @resize.window="sidebarOpen = window.innerWidth >= 1024 ? false : sidebarOpen"
+        class="lg:hidden">
+        <!-- Mobile backdrop -->
+        <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-600 bg-opacity-75 z-20 lg:hidden"
+            @click="sidebarOpen = false"></div>
     </div>
 
-    <nav class="mt-4">
+    {{-- Logo Section --}}
+    <div class="p-6 border-b border-slate-200/50 bg-gradient-to-r from-white to-slate-50/50">
+        <div class="flex items-center justify-center group">
+            <div class="relative transform transition-transform duration-500 group-hover:scale-105">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo"
+                    class="h-10 w-auto drop-shadow-sm transition-all duration-500"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                <!-- Fallback logo if image fails -->
+                <div
+                    class="hidden w-10 h-10 bg-gradient-to-br from-[#6041CE] to-purple-600 rounded-xl items-center justify-center shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z" />
+                    </svg>
+                </div>
+
+                <div
+                    class="absolute -inset-1 bg-gradient-to-r from-[#6041CE]/20 to-purple-500/20 rounded-lg blur opacity-30 group-hover:opacity-50 transition-opacity duration-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- System title -->
+        <div class="mt-3 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <div class="text-xs font-semibold text-[#6041CE] tracking-wide">PORTAL MAHASISWA</div>
+            <div class="text-xs text-slate-500">Sistem Rekomendasi</div>
+        </div>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto px-4 py-6 custom-scrollbar">
         {{-- Menu Utama --}}
-        <div class="px-4 text-xs font-semibold text-gray-500 uppercase mb-2">Menu Utama</div>
-        <ul class="space-y-1 px-4">
-            <li class="nav-item">
-                <a href="{{ route('mahasiswa.dashboard.index') }}"
-                    class="sidebar-menu-button {{ $activeMenu == 'dashboard' ? 'sidebar-active' : '' }}">
-                    <div
-                        class="w-5 h-5 mr-2 inline-block align-middle {{ $activeMenu == 'dashboard' ? 'text-[#6041CE]' : 'text-gray-400' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-full h-full"
-                            stroke="currentColor">
-                            <g clip-path="url(#clip0_dashboard)">
-                                <path
-                                    d="M3.35978 19.2398C3.59978 20.6598 4.95977 21.8098 6.39977 21.8098H17.5998C19.0298 21.8098 20.3998 20.6498 20.6398 19.2398L21.9698 11.2799C22.1298 10.2999 21.6298 8.98983 20.8598 8.36983L13.9298 2.82985C12.8598 1.96985 11.1298 1.96984 10.0698 2.81984L3.13978 8.36983C2.35978 8.98983 1.85978 10.2999 2.02978 11.2799L2.70978 15.3698"
-                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                                <path
-                                    d="M12 10.5C10.62 10.5 9.5 11.62 9.5 13C9.5 14.38 10.62 15.5 12 15.5C13.38 15.5 14.5 14.38 14.5 13"
-                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_dashboard">
-                                    <rect width="24" height="24" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </div>
-                    Dashboard
-                </a>
-            </li>
-        </ul>
+        <div class="mb-6">
+            <div class="flex items-center mb-4">
+                <div class="h-px bg-gradient-to-r from-slate-300 to-transparent flex-1"></div>
+                <span class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Menu Utama</span>
+                <div class="h-px bg-gradient-to-l from-slate-300 to-transparent flex-1"></div>
+            </div>
+
+            <ul class="space-y-2">
+                <li class="nav-item">
+                    <a href="{{ route('mahasiswa.dashboard.index') }}"
+                        class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-500 ease-in-out hover:bg-slate-50 hover:shadow-sm transform hover:scale-[1.02] {{ $activeMenu == 'dashboard' ? 'bg-gradient-to-r from-[#6041CE]/10 to-purple-500/5 text-[#6041CE] border border-[#6041CE]/20 shadow-sm scale-[1.02]' : 'text-slate-700 hover:text-slate-900' }}">
+                        <div
+                            class="flex items-center justify-center w-8 h-8 rounded-lg mr-3 transition-all duration-500 {{ $activeMenu == 'dashboard' ? 'bg-[#6041CE]/10 shadow-sm' : 'bg-slate-100 group-hover:bg-slate-200 group-hover:scale-110' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                class="w-4 h-4 transition-colors duration-500 {{ $activeMenu == 'dashboard' ? 'text-[#6041CE]' : 'text-slate-500 group-hover:text-slate-700' }}"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                            </svg>
+                        </div>
+                        <span class="font-medium">Dashboard</span>
+                        @if ($activeMenu == 'dashboard')
+                            <div class="ml-auto w-2 h-2 bg-[#6041CE] rounded-full animate-pulse"></div>
+                        @endif
+                    </a>
+                </li>
+            </ul>
+        </div>
 
         {{-- Menu Lainnya --}}
-        <div class="mt-6 px-4 text-xs font-semibold text-gray-500 uppercase mb-2">Menu Lainnya</div>
-        <ul class="space-y-1 px-4">
-            <li class="nav-item">
-                <a href="{{ route('mahasiswa.prestasi.index') }}"
-                    class="sidebar-menu-button {{ $activeMenu == 'prestasi' ? 'sidebar-active' : '' }}">
-                    <div
-                        class="w-5 h-5 mr-2 inline-block align-middle {{ $activeMenu == 'prestasi' ? 'text-[#6041CE]' : 'text-gray-400' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-full h-full"
-                            stroke="currentColor">
-                            <g clip-path="url(#clip0)">
-                                <path
-                                    d="M19.39 12.54L18.38 12.77C17.66 12.94 17.09 13.5 16.93 14.22L16.7 15.23C16.68 15.34 16.52 15.34 16.5 15.23L16.27 14.22C16.1 13.5 15.54 12.93 14.82 12.77L13.81 12.54C13.7 12.52 13.7 12.36 13.81 12.34L14.82 12.11C15.54 11.94 16.11 11.38 16.27 10.66L16.5 9.65C16.52 9.54 16.68 9.54 16.7 9.65L16.93 10.66C17.1 11.38 17.66 11.95 18.38 12.11L19.39 12.34C19.5 12.36 19.5 12.52 19.39 12.54Z"
-                                    stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" />
-                                <path
-                                    d="M13.47 15.14C13 15.27 12.51 15.34 12 15.34C8.93 15.34 6.44 12.85 6.44 9.78V3.11C6.44 2.5 6.94 2 7.55 2H16.45C17.06 2 17.56 2.5 17.56 3.11V7.08"
-                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                                <path
-                                    d="M6.91001 12H6.45001C4.00001 12 2.01001 10.01 2.01001 7.55998V5.33998C2.01001 4.72998 2.51001 4.22998 3.12001 4.22998H6.45001"
-                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                                <path
-                                    d="M21.01 10.34C21.62 9.57998 21.99 8.60998 21.99 7.55998V5.33998C21.99 4.72998 21.49 4.22998 20.88 4.22998H17.55"
-                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                                <path
-                                    d="M16.07 18.67H7.93003C7.45003 18.67 7.03003 18.98 6.88003 19.43L6.51003 20.54C6.40003 20.88 6.45003 21.25 6.66003 21.54C6.87003 21.83 7.20003 22 7.56003 22H16.45C16.81 22 17.14 21.83 17.35 21.54C17.56 21.25 17.62 20.88 17.5 20.54L17.13 19.43C16.98 18.98 16.55 18.67 16.08 18.67H16.07Z"
-                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                                <path d="M12 15.33V18.66" stroke="currentColor" stroke-width="1.5"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0">
-                                    <rect width="24" height="24" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </div>
-                    Prestasi Mahasiswa
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('mahasiswa.lomba.index') }}"
-                    class="sidebar-menu-button {{ $activeMenu == 'lomba' ? 'sidebar-active' : '' }}">
-                    <div
-                        class="w-5 h-5 mr-2 inline-block align-middle {{ $activeMenu == 'lomba' ? 'text-[#6041CE]' : 'text-gray-400' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-full h-full"
-                            stroke="currentColor">
-                            <g clip-path="url(#clip0_lomba)">
-                                <path d="M12.3701 8.88086H17.6201" stroke="currentColor" stroke-width="1.5"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M6.37988 8.88086L7.12988 9.63086L9.37988 7.38086" stroke="currentColor"
-                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M12.3701 15.8809H17.6201" stroke="currentColor" stroke-width="1.5"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M6.37988 15.8809L7.12988 16.6309L9.37988 14.3809" stroke="currentColor"
-                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M2 12.95V15C2 20 4 22 9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9"
-                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_lomba">
-                                    <rect width="24" height="24" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </div>
-                    Lomba
-                </a>
-            </li>
-        </ul>
+        <div>
+            <div class="flex items-center mb-4">
+                <div class="h-px bg-gradient-to-r from-slate-300 to-transparent flex-1"></div>
+                <span class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Menu Lainnya</span>
+                <div class="h-px bg-gradient-to-l from-slate-300 to-transparent flex-1"></div>
+            </div>
+
+            <ul class="space-y-2">
+                <li class="nav-item">
+                    <a href="{{ route('mahasiswa.prestasi.index') }}"
+                        class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-500 ease-in-out hover:bg-slate-50 hover:shadow-sm transform hover:scale-[1.02] {{ $activeMenu == 'prestasi' ? 'bg-gradient-to-r from-[#6041CE]/10 to-purple-500/5 text-[#6041CE] border border-[#6041CE]/20 shadow-sm scale-[1.02]' : 'text-slate-700 hover:text-slate-900' }}">
+                        <div
+                            class="flex items-center justify-center w-8 h-8 rounded-lg mr-3 transition-all duration-500 {{ $activeMenu == 'prestasi' ? 'bg-[#6041CE]/10 shadow-sm' : 'bg-slate-100 group-hover:bg-slate-200 group-hover:scale-110' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                class="w-4 h-4 transition-colors duration-500 {{ $activeMenu == 'prestasi' ? 'text-[#6041CE]' : 'text-slate-500 group-hover:text-slate-700' }}"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.623 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                            </svg>
+                        </div>
+                        <span class="font-medium">Prestasi Mahasiswa</span>
+                        @if ($activeMenu == 'prestasi')
+                            <div class="ml-auto w-2 h-2 bg-[#6041CE] rounded-full animate-pulse"></div>
+                        @endif
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('mahasiswa.lomba.index') }}"
+                        class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-500 ease-in-out hover:bg-slate-50 hover:shadow-sm transform hover:scale-[1.02] {{ $activeMenu == 'lomba' ? 'bg-gradient-to-r from-[#6041CE]/10 to-purple-500/5 text-[#6041CE] border border-[#6041CE]/20 shadow-sm scale-[1.02]' : 'text-slate-700 hover:text-slate-900' }}">
+                        <div
+                            class="flex items-center justify-center w-8 h-8 rounded-lg mr-3 transition-all duration-500 {{ $activeMenu == 'lomba' ? 'bg-[#6041CE]/10 shadow-sm' : 'bg-slate-100 group-hover:bg-slate-200 group-hover:scale-110' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                class="w-4 h-4 transition-colors duration-500 {{ $activeMenu == 'lomba' ? 'text-[#6041CE]' : 'text-slate-500 group-hover:text-slate-700' }}"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                        </div>
+                        <span class="font-medium">Lomba</span>
+                        @if ($activeMenu == 'lomba')
+                            <div class="ml-auto w-2 h-2 bg-[#6041CE] rounded-full animate-pulse"></div>
+                        @endif
+                    </a>
+                </li>
+            </ul>
+        </div>
     </nav>
+
+    {{-- Footer Section --}}
+    <div class="p-4 border-t border-slate-200/50 bg-gradient-to-r from-slate-50/50 to-white">
+        <div class="text-center">
+            <div class="text-xs text-slate-400 mb-1">© 2025 clockingoffbye</div>
+            <div class="text-xs text-slate-400">Portal Mahasiswa v1.0</div>
+        </div>
+    </div>
 </aside>
+
+@push('styles')
+    <style>
+        /* Custom scrollbar for sidebar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Smooth transitions for all sidebar elements */
+        .nav-item a {
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Active menu item subtle animation */
+        .nav-item a.scale-\[1\.02\] {
+            box-shadow: 0 4px 6px -1px rgba(96, 65, 206, 0.1), 0 2px 4px -1px rgba(96, 65, 206, 0.06);
+        }
+
+        /* Logo hover animation */
+        .group:hover .absolute {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                opacity: 0.3;
+            }
+
+            to {
+                opacity: 0.6;
+            }
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add entrance animation for sidebar items
+            const sidebarItems = document.querySelectorAll('.nav-item');
+            sidebarItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+
+                setTimeout(() => {
+                    item.style.transition =
+                        'opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, index * 100);
+            });
+
+            // Add active menu highlighting
+            const currentUrl = window.location.pathname;
+            const menuLinks = document.querySelectorAll('.nav-item a');
+
+            menuLinks.forEach(link => {
+                if (link.getAttribute('href') === currentUrl) {
+                    link.classList.add('active-menu');
+                }
+            });
+
+            console.log('🎯 Sidebar initialized');
+            console.log('📍 Current URL:', currentUrl);
+        });
+    </script>
+@endpush

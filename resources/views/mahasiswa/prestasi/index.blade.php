@@ -81,41 +81,42 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function() {
-            let prestasiData = [];
-            let currentPage = 1;
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                let prestasiData = [];
+                let currentPage = 1;
 
-            function getStatusConfig(status) {
-                const config = {
-                    'disetujui': {
-                        bgClass: 'bg-green-100',
-                        textClass: 'text-green-800',
-                        icon: 'fas fa-check-circle text-green-500'
-                    },
-                    'ditolak': {
-                        bgClass: 'bg-red-100',
-                        textClass: 'text-red-800',
-                        icon: 'fas fa-times-circle text-red-500'
-                    },
-                    'pending': {
-                        bgClass: 'bg-gray-200',
-                        textClass: 'text-gray-800',
-                        icon: 'fas fa-hourglass-half text-gray-500'
-                    }
-                };
+                function getStatusConfig(status) {
+                    const config = {
+                        'disetujui': {
+                            bgClass: 'bg-green-100',
+                            textClass: 'text-green-800',
+                            icon: 'fas fa-check-circle text-green-500'
+                        },
+                        'ditolak': {
+                            bgClass: 'bg-red-100',
+                            textClass: 'text-red-800',
+                            icon: 'fas fa-times-circle text-red-500'
+                        },
+                        'pending': {
+                            bgClass: 'bg-gray-200',
+                            textClass: 'text-gray-800',
+                            icon: 'fas fa-hourglass-half text-gray-500'
+                        }
+                    };
 
-                return config[status] || config.pending;
-            }
+                    return config[status] || config.pending;
+                }
 
-            function actionButtonsPrestasi(id, status) {
-                const commonButtons = `
+                function actionButtonsPrestasi(id, status) {
+                    const commonButtons = `
                     <a href="/mahasiswa/prestasi/${id}" class="action-btn text-blue-600 hover:text-blue-800" title="Detail">
                         <i class="fas fa-eye"></i>
                     </a>
                 `;
 
-                const editDeleteButtons = `
+                    const editDeleteButtons = `
                     <a href="/mahasiswa/prestasi/${id}/edit" class="action-btn text-amber-600 hover:text-amber-800" title="Edit">
                         <i class="fas fa-edit"></i>
                     </a>
@@ -125,93 +126,93 @@
                     </button>
                 `;
 
-                return `
+                    return `
                     <div class="flex items-center gap-4">
                         ${commonButtons}
                         ${status === 'disetujui' || status === 'pending' ? '' : editDeleteButtons}
                     </div>
                 `;
-            }
+                }
 
-            $(document).on('click', '.btn-hapus', function() {
-                const id = $(this).data('id');
-                Swal.fire({
-                    title: 'Yakin ingin menghapus?',
-                    text: "Data yang dihapus tidak dapat dikembalikan.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#aaa',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: `/mahasiswa/prestasi/${id}`,
-                            type: 'DELETE',
-                            data: {
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(res) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Berhasil!',
-                                    text: 'Data berhasil dihapus.',
-                                    timer: 1500,
-                                    showConfirmButton: false
-                                });
-                                loadPrestasi();
-                            },
-                            error: function() {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Gagal!',
-                                    text: 'Terjadi kesalahan saat menghapus data.',
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-
-            function setTableHeight(entriesToShow) {
-                const rowHeight = 48;
-                const headerHeight = 40;
-                const tableHeight = entriesToShow * rowHeight + headerHeight;
-                $('#prestasi-table tbody').css({
-                    'max-height': `${entriesToShow * rowHeight}px`
-                });
-            }
-
-            function renderPrestasiTable() {
-                let searchQuery = $('#search-bar').val().toLowerCase();
-                let entriesToShow = parseInt($('#show-entry').val()) || 10;
-                let tbody = $('#prestasi-body');
-
-                const statusOrder = {
-                    'pending': 1,
-                    'ditolak': 2,
-                    'disetujui': 3
-                };
-
-                let sorted = prestasiData.slice().sort((a, b) => {
-                    return (statusOrder[a.status] || 99) - (statusOrder[b.status] || 99);
+                $(document).on('click', '.btn-hapus', function() {
+                    const id = $(this).data('id');
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Data yang dihapus tidak dapat dikembalikan.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#aaa',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: `/mahasiswa/prestasi/${id}`,
+                                type: 'DELETE',
+                                data: {
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                success: function(res) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil!',
+                                        text: 'Data berhasil dihapus.',
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    });
+                                    loadPrestasi();
+                                },
+                                error: function() {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Gagal!',
+                                        text: 'Terjadi kesalahan saat menghapus data.',
+                                    });
+                                }
+                            });
+                        }
+                    });
                 });
 
-                let filtered = sorted.filter(item =>
-                    item.judul.toLowerCase().includes(searchQuery) ||
-                    item.tempat.toLowerCase().includes(searchQuery)
-                );
+                function setTableHeight(entriesToShow) {
+                    const rowHeight = 48;
+                    const headerHeight = 40;
+                    const tableHeight = entriesToShow * rowHeight + headerHeight;
+                    $('#prestasi-table tbody').css({
+                        'max-height': `${entriesToShow * rowHeight}px`
+                    });
+                }
 
-                let totalData = filtered.length;
-                let totalPages = Math.ceil(totalData / entriesToShow);
-                let startIndex = (currentPage - 1) * entriesToShow;
-                let paginated = filtered.slice(startIndex, startIndex + entriesToShow);
+                function renderPrestasiTable() {
+                    let searchQuery = $('#search-bar').val().toLowerCase();
+                    let entriesToShow = parseInt($('#show-entry').val()) || 10;
+                    let tbody = $('#prestasi-body');
 
-                tbody.empty();
+                    const statusOrder = {
+                        'pending': 1,
+                        'ditolak': 2,
+                        'disetujui': 3
+                    };
 
-                if (paginated.length === 0) {
-                    tbody.append(`
+                    let sorted = prestasiData.slice().sort((a, b) => {
+                        return (statusOrder[a.status] || 99) - (statusOrder[b.status] || 99);
+                    });
+
+                    let filtered = sorted.filter(item =>
+                        item.judul.toLowerCase().includes(searchQuery) ||
+                        item.tempat.toLowerCase().includes(searchQuery)
+                    );
+
+                    let totalData = filtered.length;
+                    let totalPages = Math.ceil(totalData / entriesToShow);
+                    let startIndex = (currentPage - 1) * entriesToShow;
+                    let paginated = filtered.slice(startIndex, startIndex + entriesToShow);
+
+                    tbody.empty();
+
+                    if (paginated.length === 0) {
+                        tbody.append(`
                         <tr>
                             <td colspan="6" class="px-6 py-8 text-center text-gray-500">
                                 <div class="flex flex-col items-center justify-center">
@@ -221,12 +222,12 @@
                             </td>
                         </tr>
                     `);
-                } else {
-                    $.each(paginated, function(index, item) {
-                        let pembimbing = item.dosens.map(d => d.nama).join(', ') || '-';
-                        const statusConfig = getStatusConfig(item.status);
+                    } else {
+                        $.each(paginated, function(index, item) {
+                            let pembimbing = item.dosens.map(d => d.nama).join(', ') || '-';
+                            const statusConfig = getStatusConfig(item.status);
 
-                        let row = `
+                            let row = `
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">${item.judul}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600">${item.tanggal_mulai}</td>
@@ -244,120 +245,122 @@
                                 </td>
                             </tr>
                         `;
-                        tbody.append(row);
-                    });
-                }
+                            tbody.append(row);
+                        });
+                    }
 
-                $("#prestasi_info").text(`Menampilkan ${paginated.length} dari ${totalData} data`);
+                    $("#prestasi_info").text(`Menampilkan ${paginated.length} dari ${totalData} data`);
 
-                let paginationHtml = '';
-                if (totalPages > 1) {
-                    
-                    if (lombaCurrentPage > 1) {
-                        paginationHtml += `
+                    let paginationHtml = '';
+                    if (totalPages > 1) {
+
+                        if (lombaCurrentPage > 1) {
+                            paginationHtml += `
                             <button class="px-3 py-1.5 rounded text-sm font-medium bg-gray-200 hover:bg-gray-300 text-gray-700 page-btn-lomba" 
                                 data-page="${lombaCurrentPage - 1}" aria-label="Previous page">
                                 <i class="fas fa-chevron-left"></i>
                             </button>
                         `;
-                    }
+                        }
 
-                    if (totalPages <= 5) {
-                        for (let i = 1; i <= totalPages; i++) {
-                            paginationHtml += `
+                        if (totalPages <= 5) {
+                            for (let i = 1; i <= totalPages; i++) {
+                                paginationHtml += `
                                 <button class="px-3 py-1.5 rounded text-sm font-medium transition-colors duration-200
                                     ${i === lombaCurrentPage ? 'bg-[#6041CE] text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'} 
                                     page-btn-lomba" data-page="${i}">${i}
                                 </button>
                             `;
-                        }
-                    } else {
-                        if (lombaCurrentPage > 2) {
-                            paginationHtml += `
+                            }
+                        } else {
+                            if (lombaCurrentPage > 2) {
+                                paginationHtml += `
                                 <button class="px-3 py-1.5 rounded text-sm font-medium bg-gray-200 hover:bg-gray-300 text-gray-700 page-btn-lomba" 
                                     data-page="1">1</button>
                             `;
 
-                            if (lombaCurrentPage > 3) {
-                                paginationHtml += `<span class="px-2 py-1.5 text-gray-500">...</span>`;
+                                if (lombaCurrentPage > 3) {
+                                    paginationHtml += `<span class="px-2 py-1.5 text-gray-500">...</span>`;
+                                }
                             }
-                        }
 
-                        for (let i = Math.max(1, lombaCurrentPage - 1); i <= Math.min(totalPages, lombaCurrentPage +
-                                1); i++) {
-                            paginationHtml += `
+                            for (let i = Math.max(1, lombaCurrentPage - 1); i <= Math.min(totalPages, lombaCurrentPage +
+                                    1); i++) {
+                                paginationHtml += `
                                 <button class="px-3 py-1.5 rounded text-sm font-medium transition-colors duration-200
                                     ${i === lombaCurrentPage ? 'bg-[#6041CE] text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'} 
                                     page-btn-lomba" data-page="${i}">${i}
                                 </button>
                             `;
-                        }
-
-                        if (lombaCurrentPage < totalPages - 1) {
-                            if (lombaCurrentPage < totalPages - 2) {
-                                paginationHtml += `<span class="px-2 py-1.5 text-gray-500">...</span>`;
                             }
 
-                            paginationHtml += `
+                            if (lombaCurrentPage < totalPages - 1) {
+                                if (lombaCurrentPage < totalPages - 2) {
+                                    paginationHtml += `<span class="px-2 py-1.5 text-gray-500">...</span>`;
+                                }
+
+                                paginationHtml += `
                                 <button class="px-3 py-1.5 rounded text-sm font-medium bg-gray-200 hover:bg-gray-300 text-gray-700 page-btn-lomba" 
                                     data-page="${totalPages}">${totalPages}</button>
                             `;
+                            }
                         }
-                    }
 
-                    if (lombaCurrentPage < totalPages) {
-                        paginationHtml += `
+                        if (lombaCurrentPage < totalPages) {
+                            paginationHtml += `
                             <button class="px-3 py-1.5 rounded text-sm font-medium bg-gray-200 hover:bg-gray-300 text-gray-700 page-btn-lomba" 
                                 data-page="${lombaCurrentPage + 1}" aria-label="Next page">
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                         `;
+                        }
                     }
+
+                    $("#prestasi_pagination").html(paginationHtml);
+
+                    $(".page-btn-prestasi").off("click").on("click", function() {
+                        currentPage = parseInt($(this).data("page"));
+                        renderPrestasiTable();
+                    });
+
+                    setTableHeight(entriesToShow);
                 }
 
-                $("#prestasi_pagination").html(paginationHtml);
+                function loadPrestasi() {
+                    $.ajax({
+                        url: '/mahasiswa/prestasi/getdata',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            prestasiData = response.data;
+                            currentPage = 1;
+                            renderPrestasiTable();
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: 'Gagal memuat data prestasi.',
+                            });
+                        }
+                    });
+                }
 
-                $(".page-btn-prestasi").off("click").on("click", function() {
-                    currentPage = parseInt($(this).data("page"));
+                $('#search-bar').on('input', function() {
+                    currentPage = 1;
                     renderPrestasiTable();
                 });
 
-                setTableHeight(entriesToShow);
-            }
-
-            function loadPrestasi() {
-                $.ajax({
-                    url: '/mahasiswa/prestasi/getdata',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        prestasiData = response.data;
-                        currentPage = 1;
-                        renderPrestasiTable();
-                    },
-                    error: function() {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal!',
-                            text: 'Gagal memuat data prestasi.',
-                        });
-                    }
+                $('#show-entry').on('change', function() {
+                    currentPage = 1;
+                    renderPrestasiTable();
                 });
-            }
 
-            $('#search-bar').on('input', function() {
-                currentPage = 1;
-                renderPrestasiTable();
+                loadPrestasi();
             });
+        </script>
+    @endpush
 
-            $('#show-entry').on('change', function() {
-                currentPage = 1;
-                renderPrestasiTable();
-            });
-
-            loadPrestasi();
-        });
-    </script>
 
     <style>
         .action-btn {

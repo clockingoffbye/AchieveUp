@@ -55,7 +55,7 @@ class RekomendasiLombaController extends Controller
     {
         $breadcrumb = (object)[
             'title' => 'Tambah Rekomendasi',
-            'list' => ['Rekomendasi', 'Daftar Lomba Aktif', 'Create']
+            'list' => ['Home', 'Daftar Lomba Aktif', 'Buat Rekomendasi']
         ];
 
         $page = (object)[
