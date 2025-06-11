@@ -89,8 +89,8 @@ class LombaController extends Controller
                 'tanggal_daftar' => $lomba->tanggal_daftar,
                 'tanggal_daftar_terakhir' => $lomba->tanggal_daftar_terakhir,
                 'periode_pendaftaran' => Carbon::parse($lomba->tanggal_daftar)->format('d M Y') .
-                    ' s.d. ' .
-                    Carbon::parse($lomba->tanggal_daftar_terakhir)->format('d M Y'),
+                ' s.d. ' .
+                Carbon::parse($lomba->tanggal_daftar_terakhir)->format('d M Y'),
                 'link' => $lomba->url,
                 'tingkat' => $lomba->tingkat,
                 'tingkat_warna' => $warnaTingkat,
@@ -349,7 +349,7 @@ class LombaController extends Controller
                 'tanggal_daftar' => $lomba->tanggal_daftar,
                 'tanggal_daftar_terakhir' => $lomba->tanggal_daftar_terakhir,
                 'periode_pendaftaran' => Carbon::parse($lomba->tanggal_daftar)->format('d M Y') . ' s.d. ' .
-                    Carbon::parse($lomba->tanggal_daftar_terakhir)->format('d M Y'),
+                Carbon::parse($lomba->tanggal_daftar_terakhir)->format('d M Y'),
                 'link' => $lomba->url,
                 'tingkat' => $lomba->tingkat,
                 'tingkat_warna' => $warnaTingkat,
@@ -381,6 +381,14 @@ class LombaController extends Controller
 
     public function approvePengajuan($id, Request $request)
     {
+        Log::info('=== APPROVE METHOD CALLED ===', [
+            'method' => __METHOD__,
+            'id' => $id,
+            'request_data' => $request->all(),
+            'url' => $request->url(),
+            'route_name' => $request->route()->getName(),
+        ]);
+
         // Cek autentikasi dan peran
         if (!Auth::guard('dosen')->check() || Auth::guard('dosen')->user()->role !== 'admin') {
             Log::warning('Unauthorized access attempt to approvePengajuan', [
@@ -395,6 +403,11 @@ class LombaController extends Controller
         }
 
         $pengajuan = PengajuanLombaMahasiswa::findOrFail($id);
+        Log::info('Pengajuan before update', [
+            'id' => $pengajuan->id,
+            'current_status' => $pengajuan->status,
+        ]);
+
         if ($pengajuan->status !== 'pending') {
             return response()->json(['error' => 'Pengajuan sudah diproses.'], 400);
         }
@@ -402,13 +415,19 @@ class LombaController extends Controller
         $lomba = $pengajuan->lomba;
         $lomba->update(['is_active' => true]);
 
-        $pengajuan->update([    
+        $pengajuan->update([
             'status' => 'approved',
             'admin_id' => Auth::guard('dosen')->id(),
             'notes' => $request->input('notes'),
         ]);
+
+        Log::info('Pengajuan after update', [
+            'id' => $pengajuan->id,
+            'new_status' => $pengajuan->fresh()->status, // Fresh data dari database
+        ]);
+
         PengajuanLombaNote::create([
-            'pengajuan_lomba_mahasiswa_id' => $pengajuan->id
+            'pengajuan_lomba_mahasiswa_id' => $pengajuan->id,
         ]);
 
         Log::info('Pengajuan disetujui', [
@@ -421,6 +440,14 @@ class LombaController extends Controller
 
     public function rejectPengajuan($id, Request $request)
     {
+        Log::info('=== REJECT METHOD CALLED ===', [
+            'method' => __METHOD__,
+            'id' => $id,
+            'request_data' => $request->all(),
+            'url' => $request->url(),
+            'route_name' => $request->route()->getName(),
+        ]);
+
         // Cek autentikasi dan peran
         if (!Auth::guard('dosen')->check() || Auth::guard('dosen')->user()->role !== 'admin') {
             Log::warning('Unauthorized access attempt to rejectPengajuan', [
@@ -446,7 +473,7 @@ class LombaController extends Controller
         ]);
 
         PengajuanLombaNote::create([
-            'pengajuan_lomba_mahasiswa_id' => $pengajuan->id
+            'pengajuan_lomba_mahasiswa_id' => $pengajuan->id,
         ]);
 
         Log::info('Pengajuan ditolak', [

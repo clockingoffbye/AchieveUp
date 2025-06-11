@@ -81,8 +81,9 @@ Route::middleware(['dosen:admin'])->prefix('admin')->name('admin.')->group(funct
 
     Route::prefix('prestasi')->name('prestasi.')->group(function () {
         Route::get('/', [VerifikasiPrestasiController::class, 'index'])->name('index');
-        Route::get('/getdata', [VerifikasiPrestasiController::class, 'getData'])->name('getdata');
         Route::get('/export', [VerifikasiPrestasiController::class, 'export'])->name('export');
+        Route::get('/getdata', [VerifikasiPrestasiController::class, 'getData'])->name('getdata');
+
         Route::get('/{id}', [VerifikasiPrestasiController::class, 'show'])->name('show');
         Route::patch('/{id}/approve', [VerifikasiPrestasiController::class, 'approve'])->name('approve');
         Route::patch('/{id}/reject', [VerifikasiPrestasiController::class, 'reject'])->name('reject');

@@ -45,11 +45,10 @@
                         </select>
                     </div>
                     <div class="flex items-end gap-2 ml-auto">
-                        <button
-                            id="btn-export"
-                            class="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center gap-1.5 font-medium transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
+                        <button id="btn-export"
+                            class="flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-[#6041CE] to-[#8B5CF6] hover:from-[#4e35a5] hover:to-[#7C3AED] text-white rounded-lg transition-all duration-200 text-sm font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 whitespace-nowrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>
@@ -147,9 +146,7 @@
                             <a href="/admin/prestasi/${id}" class="action-btn text-blue-600 hover:text-blue-800" title="Detail">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <button type="button" class="action-btn text-green-600 hover:text-green-800 approve-button" data-id="${id}" title="Setujui">
-                                <i class="fas fa-check-circle"></i>
-                            </button>
+                            
                         </div>
                     `;
                     } else if (status === 'disetujui') {
@@ -163,43 +160,90 @@
                     }
                 }
 
+                let isProcessing = false;
+
                 $(document).on('click', '.approve-button', function() {
+                    if (isProcessing) return;
+
                     const id = $(this).data('id');
+                    const button = $(this);
+
                     Swal.fire({
                         title: 'Yakin ingin menyetujui prestasi ini?',
                         text: 'Prestasi ini akan disetujui dan mahasiswa terkait akan mendapat notifikasi.',
                         icon: 'question',
+                        input: 'textarea',
+                        inputLabel: 'Catatan Persetujuan (Opsional)',
+                        inputPlaceholder: 'Tambahkan catatan untuk mahasiswa...',
+                        inputValue: 'Selamat! Data prestasi Anda telah terverifikasi dan disetujui. Terus tingkatkan prestasi dan raih pencapaian yang lebih gemilang!',
+                        inputAttributes: {
+                            'aria-label': 'Catatan Persetujuan',
+                            'rows': '4'
+                        },
                         showCancelButton: true,
                         confirmButtonColor: '#10b981',
                         cancelButtonColor: '#6b7280',
                         confirmButtonText: 'Ya, setujui!',
-                        cancelButtonText: 'Batal'
+                        cancelButtonText: 'Batal',
+                        preConfirm: (note) => {
+                            return note.trim() ||
+                                'Selamat! Data prestasi Anda telah terverifikasi dan disetujui. Terus tingkatkan prestasi dan raih pencapaian yang lebih gemilang! 🎉';
+                        }
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            isProcessing = true;
+                            button.prop('disabled', true).html(
+                                '<i class="fas fa-spinner fa-spin"></i>');
+
                             $.ajax({
                                 url: `/admin/prestasi/${id}/approve`,
                                 type: 'PATCH',
                                 data: {
-                                    _token: '{{ csrf_token() }}'
+                                    _token: '{{ csrf_token() }}',
+                                    note: result.value // Kirim catatan ke backend
                                 },
                                 success: function(res) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Berhasil!',
-                                        text: res.message ||
-                                            'Prestasi berhasil disetujui',
-                                        timer: 1500,
-                                        showConfirmButton: false
-                                    });
-                                    loadPrestasi();
+                                    console.log('Approve response:', res);
+
+                                    // Sesuaikan dengan response controller (menggunakan 'success' key)
+                                    if (res && res.success === true) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Berhasil!',
+                                            text: res.message ||
+                                                'Prestasi berhasil disetujui',
+                                            timer: 1500,
+                                            showConfirmButton: false
+                                        }).then(() => {
+                                            loadPrestasi();
+                                        });
+                                    } else {
+                                        throw new Error(res.message ||
+                                            'Response tidak valid');
+                                    }
                                 },
                                 error: function(xhr) {
+                                    console.error('Approve error:', xhr);
+
+                                    let errorMessage =
+                                        'Terjadi kesalahan saat menyetujui prestasi.';
+
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMessage = xhr.responseJSON.message;
+                                    } else if (xhr.responseText) {
+                                        errorMessage = xhr.responseText;
+                                    }
+
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Gagal!',
-                                        text: xhr.responseJSON?.message ||
-                                            'Terjadi kesalahan saat menyetujui prestasi.',
+                                        text: errorMessage,
                                     });
+                                },
+                                complete: function() {
+                                    isProcessing = false;
+                                    button.prop('disabled', false).html(
+                                        '<i class="fas fa-check-circle"></i>');
                                 }
                             });
                         }
@@ -207,7 +251,11 @@
                 });
 
                 $(document).on('click', '.reject-button', function() {
+                    if (isProcessing) return;
+
                     const id = $(this).data('id');
+                    const button = $(this);
+
                     Swal.fire({
                         title: 'Yakin ingin menolak prestasi ini?',
                         icon: 'warning',
@@ -232,6 +280,10 @@
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            isProcessing = true;
+                            button.prop('disabled', true).html(
+                                '<i class="fas fa-spinner fa-spin"></i>');
+
                             $.ajax({
                                 url: `/admin/prestasi/${id}/reject`,
                                 type: 'PATCH',
@@ -240,23 +292,47 @@
                                     note: result.value
                                 },
                                 success: function(res) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Berhasil!',
-                                        text: res.message ||
-                                            'Prestasi berhasil ditolak',
-                                        timer: 1500,
-                                        showConfirmButton: false
-                                    });
-                                    loadPrestasi();
+                                    console.log('Reject response:', res);
+
+                                    // Sesuaikan dengan response controller (menggunakan 'success' key)
+                                    if (res && res.success === true) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Berhasil!',
+                                            text: res.message ||
+                                                'Prestasi berhasil ditolak',
+                                            timer: 1500,
+                                            showConfirmButton: false
+                                        }).then(() => {
+                                            loadPrestasi();
+                                        });
+                                    } else {
+                                        throw new Error(res.message ||
+                                            'Response tidak valid');
+                                    }
                                 },
                                 error: function(xhr) {
+                                    console.error('Reject error:', xhr);
+
+                                    let errorMessage =
+                                        'Terjadi kesalahan saat menolak prestasi.';
+
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMessage = xhr.responseJSON.message;
+                                    } else if (xhr.responseText) {
+                                        errorMessage = xhr.responseText;
+                                    }
+
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Gagal!',
-                                        text: xhr.responseJSON?.message ||
-                                            'Terjadi kesalahan saat menolak prestasi.',
+                                        text: errorMessage,
                                     });
+                                },
+                                complete: function() {
+                                    isProcessing = false;
+                                    button.prop('disabled', false).html(
+                                        '<i class="fas fa-times-circle"></i>');
                                 }
                             });
                         }
@@ -400,8 +476,8 @@
                     renderPrestasiTable();
                 });
 
-                
-                $('#btn-export').on('click', function () {
+
+                $('#btn-export').on('click', function() {
                     window.open('/admin/prestasi/export', '_blank');
                 });
 

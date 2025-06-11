@@ -1,12 +1,12 @@
 {{-- filepath: d:\Laravel\AchieveUp\resources\views\landing\index.blade.php --}}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>AchieveUp - Empowering Your Future Through Learning</title>
+    <title>AchieveUp - Memberdayakan Masa Depan Melalui Pembelajaran</title>
     @vite('resources/css/app.css')
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -189,13 +189,21 @@
             transform: scale(1.05);
         }
 
-        /* Component Classes */
+        /* Button Components - Updated with rounded-md */
         .btn-primary {
-            @apply px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105;
+            @apply px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-md shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105;
         }
 
         .btn-secondary {
-            @apply px-6 py-3 border-2 border-purple-600 text-purple-600 font-semibold rounded-full transition-all duration-300 hover:bg-purple-600 hover:text-white hover:scale-105;
+            @apply px-6 py-3 border-2 border-purple-600 text-purple-600 font-semibold rounded-md transition-all duration-300 hover:bg-purple-600 hover:text-white hover:scale-105;
+        }
+
+        .btn-white {
+            @apply px-6 py-3 bg-white text-purple-600 font-semibold rounded-md shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:bg-gray-50;
+        }
+
+        .btn-outline-white {
+            @apply px-6 py-3 border-2 border-white text-white font-semibold rounded-md transition-all duration-300 hover:bg-white hover:text-purple-600 hover:scale-105;
         }
 
         .card-modern {

@@ -2,32 +2,27 @@
     <div class="container-main h-full flex justify-between items-center">
         <!-- Logo -->
         <div class="flex items-center gap-4 lg:gap-14">
-            <img src="{{ asset('images/logo.png') }}" class="h-10 hover-scale" alt="AchieveUp Logo">
+            <img src="{{ asset('images/logo.png') }}" class="h-10 hover-scale" alt="Logo AchieveUp">
         </div>
 
         <!-- Desktop Navigation -->
         <nav class="hidden lg:flex items-center gap-14">
             <a href="#home"
                 class="text-gray-500 font-medium text-base transition-all duration-300 hover:text-purple-600 relative group">
-                Home
+                Beranda
                 <span
                     class="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
             </a>
-            <a href="#about"
-                class="text-gray-500 font-medium text-base transition-all duration-300 hover:text-purple-600 relative group">
-                About
-                <span
-                    class="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
-            </a>
+
             <a href="#categories"
                 class="text-gray-500 font-medium text-base transition-all duration-300 hover:text-purple-600 relative group">
-                Categories
+                Kategori
                 <span
                     class="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
             </a>
             <a href="#leaderboard"
                 class="text-gray-500 font-medium text-base transition-all duration-300 hover:text-purple-600 relative group">
-                Leaderboard
+                Peringkat
                 <span
                     class="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
             </a>
@@ -36,7 +31,7 @@
         <!-- Desktop CTA -->
         <div class="hidden lg:flex items-center">
             <a href="{{ url('/login') }}" class="btn-primary">
-                Login ke Sistem
+                Masuk ke Sistem
             </a>
         </div>
 
@@ -54,15 +49,14 @@
             class="hidden absolute top-20 left-0 w-full glass-morphism shadow-xl z-50 transition-all duration-300 transform -translate-y-full opacity-0">
             <div class="flex flex-col gap-4 p-6">
                 <a href="#home"
-                    class="text-gray-500 font-medium py-2 px-4 rounded-lg hover:bg-white/20 transition-all duration-300">Home</a>
-                <a href="#about"
-                    class="text-gray-500 font-medium py-2 px-4 rounded-lg hover:bg-white/20 transition-all duration-300">About</a>
+                    class="text-gray-500 font-medium py-2 px-4 rounded-lg hover:bg-white/20 transition-all duration-300">Beranda</a>
+
                 <a href="#categories"
-                    class="text-gray-500 font-medium py-2 px-4 rounded-lg hover:bg-white/20 transition-all duration-300">Categories</a>
+                    class="text-gray-500 font-medium py-2 px-4 rounded-lg hover:bg-white/20 transition-all duration-300">Kategori</a>
                 <a href="#leaderboard"
-                    class="text-gray-500 font-medium py-2 px-4 rounded-lg hover:bg-white/20 transition-all duration-300">Leaderboard</a>
+                    class="text-gray-500 font-medium py-2 px-4 rounded-lg hover:bg-white/20 transition-all duration-300">Peringkat</a>
                 <div class="mt-4">
-                    <a href="{{ url('/login') }}" class="btn-primary w-full text-center">Login ke Sistem</a>
+                    <a href="{{ url('/login') }}" class="btn-primary w-full text-center block">Masuk ke Sistem</a>
                 </div>
             </div>
         </div>

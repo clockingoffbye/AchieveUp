@@ -14,7 +14,7 @@
         <div
             class="flex flex-col lg:flex-row justify-between items-center text-center lg:text-left gap-8 max-w-6xl mx-auto">
             <div class="flex-1 max-w-2xl">
-                <p class="text-white/80 text-lg font-medium mb-4">Ready to Transform?</p>
+                <p class="text-white/80 text-lg font-medium mb-4">Siap untuk Berubah?</p>
                 <h2 class="text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
                     Siap menjadikan data prestasi sebagai dasar kemajuan kampus?
                 </h2>
@@ -25,9 +25,10 @@
             </div>
 
             <div class="flex flex-col sm:flex-row gap-4">
+                <!-- Filled Button -->
                 <a href="{{ url('/login') }}"
-                    class="group flex items-center gap-3 px-8 py-4 bg-white text-purple-600 font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:bg-gray-50">
-                    <span class="text-lg font-semibold">Login ke Sistem</span>
+                    class="group inline-flex items-center gap-3 px-8 py-3 bg-[#FB8500] text-white font-semibold text-lg rounded-md shadow-lg hover:bg-[#e87600] hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                    <span>Masuk ke Sistem</span>
                     <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -35,9 +36,10 @@
                     </svg>
                 </a>
 
+                <!-- Outline Button -->
                 <button
-                    class="flex items-center gap-3 px-8 py-4 border-2 border-white text-white font-semibold rounded-full hover:bg-white hover:text-purple-600 transition-all duration-300 hover:scale-105">
-                    <span class="text-lg font-semibold">Learn More</span>
+                    class="inline-flex items-center gap-3 px-8 py-3 border-2 border-[#FB8500] text-[#FB8500] bg-transparent font-semibold text-lg rounded-md hover:bg-[#FB8500] hover:text-white hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                    <span>Pelajari Lebih Lanjut</span>
                 </button>
             </div>
         </div>

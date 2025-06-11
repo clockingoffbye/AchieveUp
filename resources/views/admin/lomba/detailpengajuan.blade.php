@@ -30,13 +30,15 @@
                             <div class="flex items-center gap-2">
                                 <div
                                     class="w-3 h-3 rounded-full 
-                                    {{ $pengajuan->status == 'disetujui'
-                                        ? 'bg-green-400'
-                                        : ($pengajuan->status == 'ditolak'
-                                            ? 'bg-red-400'
-                                            : 'bg-yellow-400') }}">
+                                {{ $pengajuan->status == 'approved'
+                                    ? 'bg-green-400'
+                                    : ($pengajuan->status == 'rejected'
+                                        ? 'bg-red-400'
+                                        : 'bg-yellow-400') }}">
                                 </div>
-                                <span class="text-sm font-medium">{{ ucfirst($pengajuan->status) }}</span>
+                                <span class="text-sm font-medium">
+                                    {{ $pengajuan->status == 'approved' ? 'Disetujui' : ($pengajuan->status == 'rejected' ? 'Ditolak' : ucfirst($pengajuan->status)) }}
+                                </span>
                             </div>
                             <div class="text-sm opacity-75">
                                 {{ $pengajuan->created_at->format('d F Y, H:i') }}
@@ -85,14 +87,14 @@
                             @else
                                 <div
                                     class="flex items-center gap-2 px-4 py-2 rounded-lg 
-        {{ $pengajuan->status == 'disetujui' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                {{ $pengajuan->status == 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="{{ $pengajuan->status == 'disetujui' ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12' }}" />
+                                            d="{{ $pengajuan->status == 'approved' ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12' }}" />
                                     </svg>
                                     <span class="font-medium text-sm">
-                                        {{ $pengajuan->status == 'disetujui' ? 'Pengajuan Telah Disetujui' : 'Pengajuan Telah Ditolak' }}
+                                        {{ $pengajuan->status == 'approved' ? 'Pengajuan Telah Disetujui' : 'Pengajuan Telah Ditolak' }}
                                     </span>
                                 </div>
                             @endif
@@ -306,7 +308,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif($pengajuan->status == 'disetujui')
+                        @elseif($pengajuan->status == 'approved')
                             <div class="bg-green-50 border-l-4 border-green-400 p-4 rounded-r-lg">
                                 <div class="flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-400 mr-2"
@@ -385,7 +387,7 @@
                                 <div class="flex flex-col items-center mr-4">
                                     <div
                                         class="w-10 h-10 rounded-full flex items-center justify-center text-white shadow-lg
-                                        {{ $pengajuan->status != 'pending' ? 'bg-green-500' : 'bg-blue-500' }}">
+                                    {{ $pengajuan->status != 'pending' ? 'bg-green-500' : 'bg-blue-500' }}">
                                         @if ($pengajuan->status != 'pending')
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">
@@ -405,7 +407,7 @@
                                         <h5 class="font-semibold text-gray-800">Review Admin</h5>
                                         <span
                                             class="px-2 py-0.5 rounded text-xs font-medium
-                                            {{ $pengajuan->status != 'pending' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                        {{ $pengajuan->status != 'pending' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
                                             {{ $pengajuan->status == 'pending' ? 'Sedang Berjalan' : 'Selesai' }}
                                         </span>
                                     </div>
@@ -442,7 +444,7 @@
                                             @if ($pengajuan->notes)
                                                 <div class="mt-2">
                                                     <p class="text-xs font-medium text-gray-700 mb-1">
-                                                        @if ($pengajuan->status == 'disetujui')
+                                                        @if ($pengajuan->status == 'approved')
                                                             Catatan Persetujuan:
                                                         @else
                                                             Alasan Penolakan:
@@ -450,9 +452,9 @@
                                                     </p>
                                                     <div
                                                         class="p-2 rounded border-l-2 text-xs
-                                                        {{ $pengajuan->status == 'disetujui'
-                                                            ? 'bg-green-50 border-green-400 text-green-800'
-                                                            : 'bg-red-50 border-red-400 text-red-800' }}">
+                                                    {{ $pengajuan->status == 'approved'
+                                                        ? 'bg-green-50 border-green-400 text-green-800'
+                                                        : 'bg-red-50 border-red-400 text-red-800' }}">
                                                         {{ $pengajuan->notes }}
                                                     </div>
                                                 </div>
@@ -468,29 +470,29 @@
                                     <div class="flex flex-col items-center mr-4">
                                         <div
                                             class="w-10 h-10 rounded-full flex items-center justify-center text-white shadow-lg
-                                            {{ $pengajuan->status == 'disetujui' ? 'bg-green-500' : 'bg-red-500' }}">
+                                        {{ $pengajuan->status == 'approved' ? 'bg-green-500' : 'bg-red-500' }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="{{ $pengajuan->status == 'disetujui' ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12' }}" />
+                                                    d="{{ $pengajuan->status == 'approved' ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12' }}" />
                                             </svg>
                                         </div>
                                     </div>
                                     <div class="flex-1">
                                         <div class="flex items-center gap-2 mb-1">
                                             <h5 class="font-semibold text-gray-800">
-                                                {{ $pengajuan->status == 'disetujui' ? 'Pengajuan Disetujui' : 'Pengajuan Ditolak' }}
+                                                {{ $pengajuan->status == 'approved' ? 'Pengajuan Disetujui' : 'Pengajuan Ditolak' }}
                                             </h5>
                                             <span
                                                 class="px-2 py-0.5 rounded text-xs font-medium
-                                                {{ $pengajuan->status == 'disetujui' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                            {{ $pengajuan->status == 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                                 Final
                                             </span>
                                         </div>
                                         <p class="text-sm text-gray-600">
                                             {{ $pengajuan->updated_at->format('d F Y, H:i') }}</p>
                                         <p class="text-xs text-gray-500 mt-1">
-                                            {{ $pengajuan->status == 'disetujui'
+                                            {{ $pengajuan->status == 'approved'
                                                 ? 'Lomba akan dipublikasikan ke mahasiswa'
                                                 : 'Usulan tidak dapat diproses lebih lanjut' }}
                                         </p>
@@ -575,27 +577,41 @@
             // Handle approve
             $(document).on('click', '.btn-approve', function() {
                 const id = $(this).data('id');
+                console.log('Approve button clicked for ID:', id); // Debug log
+
                 Swal.fire({
                     title: 'Setujui Pengajuan?',
                     text: 'Lomba akan diaktifkan setelah disetujui.',
+                    icon: 'question', // Tambahkan icon seperti referensi
                     input: 'textarea',
                     inputLabel: 'Catatan (Opsional)',
                     inputPlaceholder: 'Masukkan catatan jika ada...',
                     showCancelButton: true,
-                    confirmButtonText: 'Setujui',
+                    confirmButtonText: 'Ya, Setujui!', // Sesuaikan dengan referensi
                     cancelButtonText: 'Batal',
                     confirmButtonColor: '#10b981',
                     cancelButtonColor: '#6b7280',
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        console.log('Sending approve request for ID:', id); // Debug log
+
                         $.ajax({
-                            url: `/admin/lomba/pengajuan/approve/${id}`,
+                            url: `/admin/lomba/pengajuan/approve/${id}`, // ✅ Gunakan variable id, bukan hardcode
                             type: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                    'content') // Tambahkan header
+                            },
                             data: {
                                 _token: '{{ csrf_token() }}',
                                 notes: result.value
                             },
+                            beforeSend: function() {
+                                console.log(
+                                    'Sending AJAX approve request...'); // Debug log
+                            },
                             success: function(response) {
+                                console.log('Approve success:', response); // Debug log
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil!',
@@ -608,12 +624,24 @@
                                         .reload(); // Reload halaman untuk menampilkan perubahan
                                 });
                             },
-                            error: function(xhr) {
+                            error: function(xhr, status, error) {
+                                console.error(
+                                    'Approve error:', { // Debug log dengan detail
+                                        xhr: xhr,
+                                        status: status,
+                                        error: error
+                                    });
+
+                                let errorMessage =
+                                    'Terjadi kesalahan saat menyetujui pengajuan.';
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    errorMessage = xhr.responseJSON.message;
+                                }
+
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Gagal!',
-                                    text: xhr.responseJSON?.message ||
-                                        'Terjadi kesalahan saat menyetujui pengajuan.',
+                                    text: errorMessage
                                 });
                             }
                         });
@@ -624,27 +652,40 @@
             // Handle reject
             $(document).on('click', '.btn-reject', function() {
                 const id = $(this).data('id');
+                console.log('Reject button clicked for ID:', id); // Debug log
+
                 Swal.fire({
                     title: 'Tolak Pengajuan?',
                     text: 'Pengajuan akan ditolak dan tidak diaktifkan.',
+                    icon: 'warning', // Tambahkan icon
                     input: 'textarea',
                     inputLabel: 'Catatan (Opsional)',
                     inputPlaceholder: 'Masukkan alasan penolakan jika ada...',
                     showCancelButton: true,
-                    confirmButtonText: 'Tolak',
+                    confirmButtonText: 'Ya, Tolak!',
                     cancelButtonText: 'Batal',
                     confirmButtonColor: '#ef4444',
                     cancelButtonColor: '#6b7280',
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        console.log('Sending reject request for ID:', id); // Debug log
+
                         $.ajax({
-                            url: `/admin/lomba/pengajuan/reject/${id}`,
+                            url: `/admin/lomba/pengajuan/reject/${id}`, // ✅ Gunakan variable id
                             type: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
                             data: {
                                 _token: '{{ csrf_token() }}',
                                 notes: result.value || ''
                             },
+                            beforeSend: function() {
+                                console.log(
+                                    'Sending AJAX reject request...'); // Debug log
+                            },
                             success: function(response) {
+                                console.log('Reject success:', response); // Debug log
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil!',
@@ -653,16 +694,27 @@
                                     timer: 1500,
                                     showConfirmButton: false
                                 }).then(() => {
-                                    location
-                                        .reload(); // Reload halaman untuk menampilkan perubahan
+                                    location.reload();
                                 });
                             },
-                            error: function(xhr) {
+                            error: function(xhr, status, error) {
+                                console.error(
+                                    'Reject error:', { // Debug log dengan detail
+                                        xhr: xhr,
+                                        status: status,
+                                        error: error
+                                    });
+
+                                let errorMessage =
+                                    'Terjadi kesalahan saat menolak pengajuan.';
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    errorMessage = xhr.responseJSON.message;
+                                }
+
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Gagal!',
-                                    text: xhr.responseJSON?.message ||
-                                        'Terjadi kesalahan saat menolak pengajuan.',
+                                    text: errorMessage
                                 });
                             }
                         });

@@ -1,15 +1,11 @@
 <footer class="gradient-primary text-white">
     <div class="section-padding">
         <div class="container-main">
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12 max-w-6xl mx-auto">
-                <!-- Brand Section -->
-                <div class="lg:col-span-2">
-                    <img src="{{ asset('images/logo.png') }}" class="h-12 mb-6 hover-scale" alt="AchieveUp Logo">
-                    <p class="text-white/80 text-lg leading-relaxed mb-6 max-w-md">
-                        Empowering education through innovative achievement tracking and modern learning solutions that
-                        transform the way we learn and grow.
-                    </p>
-                    <div class="flex gap-4">
+            <div class="max-w-5xl mx-auto flex flex-col lg:flex-row justify-between gap-8 mb-12">
+                <!-- Brand & Social -->
+                <div class="flex flex-col items-center lg:items-start gap-4">
+                    <img src="{{ asset('images/logo-white.png') }}" class="h-12 mb-4 hover-scale" alt="Logo AchieveUp">
+                    <div class="flex gap-3">
                         @php
                             $socialLinks = [
                                 ['icon' => 'twitter', 'url' => '#'],
@@ -18,10 +14,9 @@
                                 ['icon' => 'instagram', 'url' => '#'],
                             ];
                         @endphp
-
                         @foreach ($socialLinks as $social)
                             <a href="{{ $social['url'] }}"
-                                class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-purple-600 transition-all duration-300 hover:scale-110">
+                                class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-purple-600 transition-all duration-300 hover:scale-110">
                                 @switch($social['icon'])
                                     @case('twitter')
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -55,55 +50,21 @@
                         @endforeach
                     </div>
                 </div>
-
                 <!-- Quick Links -->
-                <div>
-                    <h4 class="text-xl font-bold mb-6">Quick Links</h4>
-                    <div class="space-y-4">
-                        <a href="#home"
-                            class="block text-white/80 hover:text-white transition-colors duration-300">Home</a>
-                        <a href="#about"
-                            class="block text-white/80 hover:text-white transition-colors duration-300">About Us</a>
-                        <a href="#categories"
-                            class="block text-white/80 hover:text-white transition-colors duration-300">Categories</a>
-                        <a href="#leaderboard"
-                            class="block text-white/80 hover:text-white transition-colors duration-300">Leaderboard</a>
-                    </div>
-                </div>
-
-                <!-- Support -->
-                <div>
-                    <h4 class="text-xl font-bold mb-6">Support</h4>
-                    <div class="space-y-4">
-                        <a href="#"
-                            class="block text-white/80 hover:text-white transition-colors duration-300">Help Center</a>
-                        <a href="#"
-                            class="block text-white/80 hover:text-white transition-colors duration-300">Contact Us</a>
-                        <a href="#"
-                            class="block text-white/80 hover:text-white transition-colors duration-300">Privacy
-                            Policy</a>
-                        <a href="#"
-                            class="block text-white/80 hover:text-white transition-colors duration-300">Terms of
-                            Service</a>
-                    </div>
+                <div class="flex flex-col items-center lg:items-start gap-2">
+                    <h4 class="text-lg font-bold mb-4">Tautan Cepat</h4>
+                    <a href="#home" class="text-white/80 hover:text-white transition-colors duration-300">Beranda</a>
+                    <a href="#categories"
+                        class="text-white/80 hover:text-white transition-colors duration-300">Kategori</a>
+                    <a href="#leaderboard" class="text-white/80 hover:text-white transition-colors duration-300">Papan
+                        Skor</a>
                 </div>
             </div>
-
             <!-- Bottom Section -->
-            <div class="border-t border-white/20 pt-8 max-w-6xl mx-auto">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p class="text-white/80 text-center md:text-left">
-                        © 2025 AchieveUp. All rights reserved. Made with ❤️ for better education.
-                    </p>
-                    <div class="flex gap-6">
-                        <a href="#"
-                            class="text-white/80 hover:text-white transition-colors duration-300 text-sm">Privacy</a>
-                        <a href="#"
-                            class="text-white/80 hover:text-white transition-colors duration-300 text-sm">Terms</a>
-                        <a href="#"
-                            class="text-white/80 hover:text-white transition-colors duration-300 text-sm">Cookies</a>
-                    </div>
-                </div>
+            <div class="border-t border-white/20 pt-8 mt-8 max-w-5xl mx-auto">
+                <p class="text-white/80 text-center">
+                    © 2025 AchieveUp.
+                </p>
             </div>
         </div>
     </div>

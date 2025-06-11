@@ -375,44 +375,45 @@ class Electre
         return $hasil;
     }
 
-    public function getRanking()
-    {
-        $alternatif = $this->entrophy->getDataAlternatif();
-        $nilaiConcordance = $this->getNilaiCorcondace();
-        $nilaiDiscordance = $this->getNilaiDiscordance();
+        public function getRanking()
+        {
+            $alternatif = $this->entrophy->getDataAlternatif();
+            $nilaiConcordance = $this->getNilaiCorcondace();
+            $nilaiDiscordance = $this->getNilaiDiscordance();
 
-        // Proses data concordance dan discordance per alternatif
-        $concordanceData = $this->kelompokkanData($nilaiConcordance, count($alternatif));
-        $discordanceData = $this->kelompokkanData($nilaiDiscordance, count($alternatif));
+            // Proses data concordance dan discordance per alternatif
+            $concordanceData = $this->kelompokkanData($nilaiConcordance, count($alternatif));
+            $discordanceData = $this->kelompokkanData($nilaiDiscordance, count($alternatif));
 
-        $ranking = [];
+            $ranking = [];
 
-        foreach ($alternatif as $index => $alt) {
-            $key = 'A-' . ($index + 1);
-            $altNumber = $index + 1;
+            foreach ($alternatif as $index => $alt) {
+                $key = 'A-' . ($index + 1);
+                $altNumber = $index + 1;
 
-            $ranking[] = [
-                'alternatif' => $key,
-                'nama' => $alt['nama'],
-                'nim' => $alt['nim'],
-                'concordance' => $concordanceData[$altNumber] ?? ['total' => 0, 'details' => []],
-                'discordance' => $discordanceData[$altNumber] ?? ['total' => 0, 'details' => []],
-                'net_flow' => ($concordanceData[$altNumber]['total'] ?? 0) - ($discordanceData[$altNumber]['total'] ?? 0),
-            ];
+                $ranking[] = [
+                    'alternatif' => $key,
+                    'nama' => $alt['nama'],
+                    'nim' => $alt['nim'],
+                    'concordance' => $concordanceData[$altNumber] ?? ['total' => 0, 'details' => []],
+                    'discordance' => $discordanceData[$altNumber] ?? ['total' => 0, 'details' => []],
+                    'net_flow' => ($concordanceData[$altNumber]['total'] ?? 0) - ($discordanceData[$altNumber]['total'] ?? 0),
+                ];
+            }
+
+            // Urutkan berdasarkan net_flow DESC
+            usort($ranking, function ($a, $b) {
+                return $b['net_flow'] <=> $a['net_flow'];
+            });
+
+            // Beri peringkat setelah sorting
+            foreach ($ranking as $i => &$item) {
+                $item['rank'] = $i + 1;
+            }
+
+
+            return $ranking;
         }
-
-        // Urutkan berdasarkan net_flow DESC
-        usort($ranking, function ($a, $b) {
-            return $b['net_flow'] <=> $a['net_flow'];
-        });
-
-        // Beri peringkat setelah sorting
-        foreach ($ranking as $i => &$item) {
-            $item['rank'] = $i + 1;
-        }
-
-        return $ranking;
-    }
 
     private function kelompokkanData($dataPasangan, $jumlahAlternatif)
     {

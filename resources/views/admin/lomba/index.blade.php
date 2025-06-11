@@ -253,9 +253,7 @@
                     `;
                     } else if (status === 'rejected') {
                         buttons += `
-                        <a href="/mahasiswa/pengajuan-lomba/${id}/edit" class="action-btn text-amber-600 hover:text-amber-800" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </a>
+                        
                     `;
                     }
 
@@ -311,23 +309,23 @@
                                 <td class="px-6 py-4 text-sm">
                                     ${item.link ? 
                                       `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline flex items-center gap-1">
-                                                                                    <span class="truncate max-w-[150px]">${item.link}</span>
-                                                                                    <i class="fas fa-external-link-alt text-xs"></i>
-                                                                                  </a>` : 
+                                                                                            <span class="truncate max-w-[150px]">${item.link}</span>
+                                                                                            <i class="fas fa-external-link-alt text-xs"></i>
+                                                                                          </a>` : 
                                       '<span class="text-gray-400">-</span>'}
                                 </td>
                                 <td class="px-6 py-4 text-sm">
                                     <div class="flex flex-wrap gap-1">
                                         ${item.bidang.length > 0 ? 
                                             `<span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">
-                                                                                        ${item.bidang[0].nama}
-                                                                                    </span>` : 
+                                                                                                ${item.bidang[0].nama}
+                                                                                            </span>` : 
                                             '<span class="text-gray-400">-</span>'
                                         }
                                         ${item.bidang.length > 1 ? 
                                             `<span class="inline-flex items-center justify-center bg-gray-100 text-gray-700 text-xs font-medium px-2 py-0.5 rounded-full" title="${item.bidang.slice(1).map(b => b.nama).join(', ')}">
-                                                                                        +${item.bidang.length - 1}
-                                                                                    </span>` : 
+                                                                                                +${item.bidang.length - 1}
+                                                                                            </span>` : 
                                             ''
                                         }
                                     </div>
@@ -423,24 +421,24 @@
                                 <td class="px-6 py-4 text-sm">
                                     ${item.link ? 
                                       `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline flex items-center gap-1">
-                                                                                    <span class="truncate max-w-[120px]">${item.link}</span>
-                                                                                    <i class="fas fa-external-link-alt text-xs"></i>
-                                                                                  </a>` : 
+                                                                                            <span class="truncate max-w-[120px]">${item.link}</span>
+                                                                                            <i class="fas fa-external-link-alt text-xs"></i>
+                                                                                          </a>` : 
                                       '<span class="text-gray-400">-</span>'}
                                 </td>
                                 <td class="px-6 py-4 text-sm">
                                     <div class="flex flex-wrap items-center gap-1">
                                         ${item.bidang.length > 0 ? 
                                             `<span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">
-                                                                        ${item.bidang[0].nama}
-                                                                    </span>` : 
+                                                                                ${item.bidang[0].nama}
+                                                                            </span>` : 
                                             '<span class="text-gray-400">-</span>'
                                         }
                                         ${item.bidang.length > 1 ? 
                                             `<span class="inline-flex items-center justify-center bg-gray-100 text-gray-700 text-xs font-medium px-2 py-0.5 rounded-full cursor-help" 
-                                                                        title="${item.bidang.slice(1).map(b => b.nama).join(', ')}">
-                                                                        +${item.bidang.length - 1}
-                                                                    </span>` : 
+                                                                                title="${item.bidang.slice(1).map(b => b.nama).join(', ')}">
+                                                                                +${item.bidang.length - 1}
+                                                                            </span>` : 
                                             ''
                                         }
                                     </div>

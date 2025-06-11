@@ -11,37 +11,43 @@
     <div class="container-main flex flex-col-reverse lg:flex-row items-center min-h-screen pt-24 pb-16 gap-12 lg:gap-20">
         <!-- Content -->
         <div class="flex-1 flex flex-col items-start gap-6 text-center lg:text-left animate-on-scroll max-w-2xl">
-            <p class="text-purple-600 text-sm lg:text-base font-medium">Welcome to AchieveUp</p>
+            <p class="text-purple-600 text-sm lg:text-base font-medium">Selamat Datang di AchieveUp</p>
 
             <h1 class="text-4xl lg:text-6xl font-bold leading-tight">
-                <span class="text-gradient">Empowering</span>
-                <span class="text-gray-900">Your Future</span><br>
-                <span class="text-gradient">Through</span>
-                <span class="text-gray-900">Learning</span>
+                <span class="text-gradient">Catat</span>
+                <span class="text-gray-900">Setiap Prestasi</span><br>
+                <span class="text-gradient">Raih</span>
+                <span class="text-gray-900">Peringkat Terbaik</span>
             </h1>
 
-            <div class="flex w-full justify-center lg:justify-start items-center gap-4">
-                <div class="w-2 h-2 rounded-full bg-purple-600"></div>
-                <div class="w-12 h-2 rounded-full bg-purple-300"></div>
-            </div>
-
             <p class="text-lg lg:text-xl text-gray-600 leading-relaxed">
-                Making learning easier with modern tools and interactive online experiences that transform education.
+                Sistem pencatatan prestasi mahasiswa yang membantu melacak, mengevaluasi, dan memeringkat pencapaian
+                akademik secara komprehensif.
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 w-full justify-center lg:justify-start">
-                <button class="btn-primary">Get Started</button>
-                <button class="btn-secondary">Learn More</button>
+                <button
+                    class="px-8 py-4 rounded-xl font-semibold text-white text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 min-w-[180px]"
+                    style="background: linear-gradient(180deg, #5F40CB 0%, #2F2065 100%);">
+                    Mulai Sekarang
+                </button>
+
+                <button
+                    class="px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 min-w-[180px] bg-transparent text-[#5F40CB] hover:bg-[#5F40CB] hover:text-white"
+                    style="border: 1px solid #5F40CB;">
+                    Pelajari Lebih Lanjut
+                </button>
             </div>
         </div>
 
         <!-- Image -->
-        <div class="flex-1 flex justify-center items-center animate-on-scroll max-w-2xl" style="animation-delay: 0.2s;">
+        <div class="flex-1 flex justify-center lg:justify-end lg:ml-16 items-center animate-on-scroll max-w-lg lg:ml-12"
+            style="animation-delay: 0.2s;">
             <div class="relative">
-                <img src="{{ asset('images/head_mobile.png') }}" alt="Hero Image"
-                    class="max-w-full h-80 sm:hidden animate-float">
-                <img src="{{ asset('images/head.png') }}" alt="Hero Image"
-                    class="w-full max-w-xl h-auto hidden sm:block animate-float drop-shadow-2xl">
+                <img src="{{ asset('images/head_mobile.png') }}" alt="Gambar Hero"
+                    class="max-w-full h-64 sm:hidden animate-float">
+                <img src="{{ asset('images/mascot v1.png') }}" alt="Gambar Hero"
+                    class="w-full max-w-md h-auto hidden sm:block animate-float drop-shadow-2xl">
 
                 <!-- Floating decorative elements -->
                 <div class="absolute -top-4 -left-4 w-8 h-8 bg-yellow-400 rounded-full animate-float opacity-80"></div>

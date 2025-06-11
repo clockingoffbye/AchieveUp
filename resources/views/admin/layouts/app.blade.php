@@ -162,9 +162,9 @@
                 });
             });
 
-            console.log('🚀 Admin Panel Loaded');
-            console.log('👤 User:', window.AdminApp.user.name);
-            console.log('⏰ Time:', new Date().toLocaleString(window.AdminApp.config.dateFormat, {
+            console.log('Admin Panel Loaded');
+            console.log('User:', window.AdminApp.user.name);
+            console.log('Time:', new Date().toLocaleString(window.AdminApp.config.dateFormat, {
                 timeZone: window.AdminApp.config.timezone
             }));
         });

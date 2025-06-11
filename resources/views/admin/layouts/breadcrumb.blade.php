@@ -1,5 +1,5 @@
 <div
-    class="relative overflow-hidden bg-gradient-to-r from-white via-gray-50 to-[#6041CE]/5 rounded-2xl shadow-sm border border-gray-200/50 p-6 group hover:shadow-md transition-all duration-500">
+    class="relative overflow-hidden bg-gradient-to-r from-white via-gray-50 to-[#6041CE]/5 rounded-lg shadow-sm border border-gray-200/50 p-6 group hover:shadow-md transition-all duration-500">
     <div class="absolute inset-0 opacity-5">
         <div class="absolute inset-0 bg-gradient-to-br from-[#6041CE]/10 via-purple-500/5 to-blue-500/10"></div>
         <svg class="absolute top-0 right-0 w-32 h-32 transform translate-x-16 -translate-y-16 text-[#6041CE]/20"

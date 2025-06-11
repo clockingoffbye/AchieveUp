@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Prestasi;
 use App\Models\PrestasiNote;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -42,6 +43,7 @@ class VerifikasiPrestasiController extends Controller
             'data' => $prestasis,
         ]);
     }
+
     public function approve(Request $request, $id)
     {
         if (!Auth::guard('dosen')->check() || Auth::guard('dosen')->user()->role !== 'admin') {
@@ -59,11 +61,15 @@ class VerifikasiPrestasiController extends Controller
             $prestasi = Prestasi::findOrFail($id);
             $prestasi->update(['status' => 'disetujui']);
 
+            // Default catatan jika tidak ada dari frontend
+            $defaultNote = 'Selamat! Data prestasi Anda telah terverifikasi dan disetujui. Terus tingkatkan prestasi dan raih pencapaian yang lebih gemilang! 🎉';
+            $approvalNote = $request->input('note', $defaultNote);
+
             $note = PrestasiNote::create([
                 'prestasi_id' => $prestasi->id,
                 'dosen_id' => Auth::guard('dosen')->id(),
                 'status' => 'disetujui',
-                'note' => null,
+                'note' => $approvalNote, // Simpan catatan dari frontend
             ]);
 
             $mahasiswaList = DB::table('prestasi_mahasiswa')->where('prestasi_id', $prestasi->id)->get();
@@ -78,7 +84,10 @@ class VerifikasiPrestasiController extends Controller
                 ]);
             }
 
-            Log::info('Prestasi approved', ['prestasi_id' => $prestasi->id]);
+            Log::info('Prestasi approved', [
+                'prestasi_id' => $prestasi->id,
+                'note' => $approvalNote,
+            ]);
 
             return response()->json([
                 'success' => true,
@@ -88,7 +97,7 @@ class VerifikasiPrestasiController extends Controller
             Log::error('Error approving prestasi', ['error' => $e->getMessage()]);
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan.',
+                'message' => 'Terjadi kesalahan saat menyetujui prestasi.',
             ], 500);
         }
     }
@@ -96,40 +105,55 @@ class VerifikasiPrestasiController extends Controller
     public function reject(Request $request, $id)
     {
         if (!Auth::guard('dosen')->check() || Auth::guard('dosen')->user()->role !== 'admin') {
-            abort(403, 'Tidak diizinkan menolak prestasi.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak diizinkan menolak prestasi.',
+            ], 403);
         }
 
         $request->validate([
             'note' => 'required|string|max:1000',
         ]);
 
-        $prestasi = Prestasi::findOrFail($id);
-        $prestasi->update(['status' => 'ditolak']);
+        try {
+            $prestasi = Prestasi::findOrFail($id);
+            $prestasi->update(['status' => 'ditolak']);
 
-        $note = PrestasiNote::create([
-            'prestasi_id' => $prestasi->id,
-            'dosen_id' => Auth::guard('dosen')->id(),
-            'status' => 'ditolak',
-            'note' => $request->input('note'),
-        ]);
-
-        $mahasiswaList = DB::table('prestasi_mahasiswa')->where('prestasi_id', $prestasi->id)->get();
-
-        foreach ($mahasiswaList as $mhs) {
-            DB::table('mahasiswa_prestasi_notes')->insert([
-                'mahasiswa_id'       => $mhs->mahasiswa_id,
-                'prestasi_notes_id'  => $note->id,
-                'is_accepted'        => false,
-                'created_at'         => now(),
-                'updated_at'         => now(),
+            $note = PrestasiNote::create([
+                'prestasi_id' => $prestasi->id,
+                'dosen_id' => Auth::guard('dosen')->id(),
+                'status' => 'ditolak',
+                'note' => $request->input('note'),
             ]);
 
-        }
+            $mahasiswaList = DB::table('prestasi_mahasiswa')->where('prestasi_id', $prestasi->id)->get();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Prestasi berhasil ditolak.',
-        ]);
+            foreach ($mahasiswaList as $mhs) {
+                DB::table('mahasiswa_prestasi_notes')->insert([
+                    'mahasiswa_id' => $mhs->mahasiswa_id,
+                    'prestasi_notes_id' => $note->id,
+                    'is_accepted' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            Log::info('Prestasi rejected', [
+                'prestasi_id' => $prestasi->id,
+                'note' => $request->input('note'),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Prestasi berhasil ditolak.',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error rejecting prestasi', ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menolak prestasi.',
+            ], 500);
+        }
     }
 
     public function show($id)
@@ -152,5 +176,14 @@ class VerifikasiPrestasiController extends Controller
         }
 
         return view('admin.prestasi.detail', compact('breadcrumb', 'page', 'activeMenu', 'prestasi'));
+    }
+
+    public function export()
+    {
+        $prestasis = Prestasi::with(['dosens', 'mahasiswas.programStudi', 'bidangs.lomba'])
+            ->where('status', 'disetujui')
+            ->get();
+        $pdf = Pdf::loadView('admin.prestasi.export', compact('prestasis'))->setPaper('a4', 'landscape');
+        return $pdf->download('daftar-prestasi-disetujui.pdf');
     }
 }

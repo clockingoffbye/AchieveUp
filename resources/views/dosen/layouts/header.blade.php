@@ -113,7 +113,7 @@
                             x-transition:leave="transition ease-in duration-500"
                             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                             x-transition:leave-end="opacity-0 translate-y-2 scale-95"
-                            class="absolute right-0 mt-3 w-72 bg-white/95 backdrop-blur-md border border-gray-200/50 rounded-2xl shadow-xl z-50 overflow-hidden ring-1 ring-black/5">
+                            class="absolute right-0 mt-3 w-72 bg-white/95 backdrop-blur-md border border-gray-200/50 rounded-lg shadow-xl z-50 overflow-hidden ring-1 ring-black/5">
 
                             <!-- User Profile Section -->
                             <div
@@ -205,6 +205,36 @@
 
 @push('scripts')
     <script>
+        function showLoading() {
+            // Create or show a loading overlay that does NOT obscure SweetAlert modals
+            let overlay = document.getElementById('custom-loading-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'custom-loading-overlay';
+                overlay.style.position = 'fixed';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.width = '100vw';
+                overlay.style.height = '100vh';
+                overlay.style.background = 'rgba(255,255,255,0.4)';
+                overlay.style.zIndex = '1040';
+                overlay.style.display = 'flex';
+                overlay.style.alignItems = 'center';
+                overlay.style.justifyContent = 'center';
+                overlay.innerHTML = `
+            <div class="loader-spinner" style="border: 6px solid #eee; border-top: 6px solid #6041ce; border-radius: 50%; width: 48px; height: 48px; animation: spin 1s linear infinite;"></div>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        `;
+                document.body.appendChild(overlay);
+            }
+            overlay.style.display = 'flex';
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             function updateDateTime() {
                 const now = new Date();

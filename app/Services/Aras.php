@@ -13,7 +13,8 @@ class Aras
         $this->entrophy = $entrophy;
     }
 
-    public function getAllFunction(){
+    public function getAllFunction()
+    {
         return [
             'getAlternatif' => $this->getAlternatif(),
             'getDataBaru' => $this->getDataBaru(),
@@ -112,7 +113,7 @@ class Aras
                     $normalisasi[$k] = 0; // Atau bisa diatur sesuai kebutuhan
                 }
             }
-            foreach ($bobotKriteria as $b => $bobot){
+            foreach ($bobotKriteria as $b => $bobot) {
                 $normalisasi[$b] = $normalisasi[$b] * $bobot;
             }
             $normalisasiBaru[] = array_merge(['alternatif' => $alternatif['alternatif'], 'nama' => $alternatif['nama'], 'nim' => $alternatif['nim']], $normalisasi);
@@ -131,8 +132,14 @@ class Aras
             if ($alternatif['alternatif'] === 'A0') {
                 $nilaiSiA0 = 0;
                 foreach ($alternatif as $k => $v) {
-                    if ($k === 'alternatif' || $k === 'nama' || $k === 'nim') continue;
-                    if (is_numeric($v)) $nilaiSiA0 += $v;
+                    if ($k === 'alternatif' || $k === 'nama' || $k === 'nim') {
+                        continue;
+                    }
+
+                    if (is_numeric($v)) {
+                        $nilaiSiA0 += $v;
+                    }
+
                 }
                 break;
             }
@@ -141,8 +148,14 @@ class Aras
         foreach ($dataNormallisasi as $alternatif) {
             $nilaiSi = 0;
             foreach ($alternatif as $k => $v) {
-                if ($k === 'alternatif' || $k === 'nama' || $k === 'nim') continue;
-                if (is_numeric($v)) $nilaiSi += $v;
+                if ($k === 'alternatif' || $k === 'nama' || $k === 'nim') {
+                    continue;
+                }
+
+                if (is_numeric($v)) {
+                    $nilaiSi += $v;
+                }
+
             }
 
             $row = [
@@ -167,14 +180,23 @@ class Aras
     public function getRanking()
     {
         $nilaiUtilitas = $this->getNilaiUtilitas();
+        // dd($nilaiUtilitas);
+
+        // Hapus data dengan alternatif == 0
+        $nilaiUtilitas = array_filter($nilaiUtilitas, function ($item) {
+            return $item['alternatif'] != 'A0';
+        });
+
+        // Urutkan berdasarkan nilaiKi descending
         usort($nilaiUtilitas, function ($a, $b) {
             return $b['nilaiKi'] <=> $a['nilaiKi'];
         });
 
+        // Beri peringkat
         foreach ($nilaiUtilitas as $index => &$alternatif) {
             $alternatif['ranking'] = $index + 1;
         }
 
-        return $nilaiUtilitas;
+        return array_values($nilaiUtilitas); // Reset index agar rapi
     }
 }

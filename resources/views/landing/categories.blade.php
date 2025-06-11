@@ -7,126 +7,137 @@
     </div>
 
     <img src="{{ asset('images/absolute1.png') }}" class="absolute left-0 lg:left-96 w-32 opacity-20 animate-float"
-        alt="decoration">
+        alt="dekorasi">
 
     <div class="container-main relative z-10">
         <!-- Section Header -->
         <div class="text-center mb-16 animate-on-scroll">
-            <p class="text-purple-600 text-sm lg:text-base font-medium mb-4">Explore Our Platform</p>
+            <p class="text-purple-600 text-sm lg:text-base font-medium mb-4">Eksplorasi Bidang Prestasi
+            </p>
             <h2 class="text-4xl lg:text-5xl font-bold mb-6">
-                <span class="text-gradient">Top Categories</span>
+                <span class="text-gradient">Bidang Unggulan</span>
             </h2>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                Discover various learning categories that will help you achieve your academic and professional goals
+                Temukan berbagai bidang pengembangan yang akan membantu Anda mencapai tujuan akademik dan profesional
+                Anda.
             </p>
         </div>
 
-        <!-- Categories Grid -->
+        <!-- Fields Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
             @php
-                $categories = [
+                $fields = [
+                    ['name' => 'Sains', 'count' => '110', 'color' => 'from-cyan-500 to-blue-500', 'icon' => 'science'],
                     [
-                        'name' => 'Academic',
-                        'count' => '125',
-                        'color' => 'from-purple-500 to-purple-600',
-                        'icon' => 'academic',
+                        'name' => 'UI/UX Designer',
+                        'count' => '60',
+                        'color' => 'from-fuchsia-500 to-purple-400',
+                        'icon' => 'uiux',
                     ],
-                    ['name' => 'Sports', 'count' => '89', 'color' => 'from-red-500 to-pink-500', 'icon' => 'sports'],
                     [
-                        'name' => 'Technology',
+                        'name' => 'Keamanan Siber',
+                        'count' => '42',
+                        'color' => 'from-gray-700 to-blue-400',
+                        'icon' => 'cyber',
+                    ],
+                    [
+                        'name' => 'Pengembangan Aplikasi',
+                        'count' => '87',
+                        'color' => 'from-green-400 to-blue-500',
+                        'icon' => 'appdev',
+                    ],
+                    [
+                        'name' => 'Data Science',
+                        'count' => '74',
+                        'color' => 'from-blue-600 to-green-300',
+                        'icon' => 'datascience',
+                    ],
+                    [
+                        'name' => 'Business Plan',
+                        'count' => '54',
+                        'color' => 'from-yellow-400 to-orange-500',
+                        'icon' => 'bplan',
+                    ],
+                    [
+                        'name' => 'Teknologi Informasi',
                         'count' => '203',
                         'color' => 'from-teal-500 to-green-500',
                         'icon' => 'tech',
                     ],
-                    ['name' => 'Arts', 'count' => '67', 'color' => 'from-pink-500 to-rose-500', 'icon' => 'arts'],
                     [
-                        'name' => 'Leadership',
-                        'count' => '45',
-                        'color' => 'from-blue-500 to-indigo-500',
-                        'icon' => 'leadership',
-                    ],
-                    [
-                        'name' => 'Programming',
-                        'count' => '156',
-                        'color' => 'from-indigo-500 to-purple-500',
-                        'icon' => 'programming',
-                    ],
-                    [
-                        'name' => 'Research',
-                        'count' => '78',
-                        'color' => 'from-orange-500 to-red-500',
-                        'icon' => 'research',
-                    ],
-                    [
-                        'name' => 'Business',
-                        'count' => '92',
-                        'color' => 'from-violet-500 to-purple-500',
-                        'icon' => 'business',
+                        'name' => 'Jaringan Komputer',
+                        'count' => '69',
+                        'color' => 'from-indigo-500 to-blue-500',
+                        'icon' => 'network',
                     ],
                 ];
             @endphp
 
-            @foreach ($categories as $index => $category)
+            @foreach ($fields as $index => $field)
                 <div class="group card-modern p-6 cursor-pointer animate-on-scroll"
-                    style="animation-delay: {{ ($index + 1) * 0.1 }}s;">
+                    style="animation-delay: {{ ($index + 1) * 0.07 }}s;">
                     <div class="flex items-center gap-4">
                         <div
-                            class="flex-shrink-0 w-16 h-16 bg-gradient-to-br {{ $category['color'] }} rounded-xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-all duration-300">
-                            @switch($category['icon'])
-                                @case('academic')
+                            class="flex-shrink-0 w-16 h-16 bg-gradient-to-br {{ $field['color'] }} rounded-xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-all duration-300">
+                            @switch($field['icon'])
+                                @case('science')
                                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        <circle cx="10" cy="10" r="8" />
+                                        <path d="M10 2v16M2 10h16" stroke="white" stroke-width="2" />
                                     </svg>
                                 @break
 
-                                @case('sports')
+                                @case('uiux')
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 20 20">
+                                        <rect x="3" y="3" width="14" height="14" rx="3" />
+                                        <path d="M3 8h14M3 12h14" />
+                                    </svg>
+                                @break
+
+                                @case('cyber')
                                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+                                        <rect x="2" y="7" width="16" height="10" rx="2" />
+                                        <circle cx="10" cy="12" r="2" fill="white" />
+                                    </svg>
+                                @break
+
+                                @case('appdev')
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 20 20">
+                                        <rect x="4" y="4" width="12" height="12" rx="2" />
+                                        <path d="M8 8h4v4H8z" />
+                                    </svg>
+                                @break
+
+                                @case('datascience')
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 20 20">
+                                        <circle cx="10" cy="10" r="8" />
+                                        <path d="M10 2v16M2 10h16" />
+                                    </svg>
+                                @break
+
+                                @case('bplan')
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                        <rect x="4" y="4" width="12" height="6" rx="2" />
+                                        <rect x="4" y="12" width="12" height="4" rx="2" />
                                     </svg>
                                 @break
 
                                 @case('tech')
                                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                                        <rect x="4" y="4" width="12" height="12" rx="3" />
                                     </svg>
                                 @break
 
-                                @case('arts')
-                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
-                                    </svg>
-                                @break
-
-                                @case('leadership')
-                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                @break
-
-                                @case('programming')
-                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                @break
-
-                                @case('research')
-                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z" />
-                                    </svg>
-                                @break
-
-                                @case('business')
-                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"
-                                            clip-rule="evenodd" />
+                                @case('network')
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 20 20">
+                                        <circle cx="6" cy="6" r="2" />
+                                        <circle cx="14" cy="6" r="2" />
+                                        <circle cx="10" cy="14" r="2" />
+                                        <path d="M6 8v2.5l4 3V14m0-3.5l4-3V8" />
                                     </svg>
                                 @break
                             @endswitch
@@ -134,9 +145,9 @@
                         <div class="flex-1">
                             <h3
                                 class="text-lg lg:text-xl font-semibold text-gray-800 group-hover:text-purple-600 transition-colors duration-300">
-                                {{ $category['name'] }}
+                                {{ $field['name'] }}
                             </h3>
-                            <p class="text-sm lg:text-base text-gray-500">{{ $category['count'] }} Uploads</p>
+                            <p class="text-sm lg:text-base text-gray-500">{{ $field['count'] }} Unggahan</p>
                         </div>
                     </div>
                 </div>

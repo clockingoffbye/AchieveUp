@@ -7,18 +7,18 @@ use App\Models\Mahasiswa;
 class Entrophy
 {
     // Konstanta untuk nilai minimum dan presisi
-    private const MIN_VALUE = 0.001;
+    private const MIN_VALUE = 0.01;
     private const PRECISION = 6;
 
     public function getDataMahasiswa()
-    { 
+    {
         $mahasiswa = Mahasiswa::with([
             'prestasi' => function ($q) {
                 $q->where('tanggal_selesai', '>=', now()->subMonths(6));
             },
             'profil',
         ])
-            ->limit(10) 
+            ->limit(10)
             ->get();
 
         return $mahasiswa;
@@ -299,7 +299,7 @@ class Entrophy
     protected function hitungBobotToefl($skor)
     {
         // Perbaikan: tangani nilai yang sangat kecil
-        if ($skor <= 1) { 
+        if ($skor <= 1) {
             return 1; // Nilai minimum
         }
         if ($skor >= 550) {
@@ -316,8 +316,8 @@ class Entrophy
 
     protected function hitungBobotOrganisasi($pengalaman)
     {
-        if ($pengalaman <= 0.) { 
-            return 1; 
+        if ($pengalaman <= 0.) {
+            return 1;
         }
         if ($pengalaman > 3) {
             return 5;
