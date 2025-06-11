@@ -8,17 +8,14 @@
     <title>@yield('title') | Admin Panel</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- Favicons & Meta -->
     <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
     <meta name="description" content="Sistem Rekomendasi Lomba - Admin Panel">
     <meta name="author" content="clockingoffbye">
 
-    <!-- CSS Dependencies -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.css" rel="stylesheet">
     @vite('resources/css/app.css')
 
-    <!-- Global Styles -->
     <style>
         /* Smooth scrolling for entire page */
         html {
@@ -82,7 +79,6 @@
 </head>
 
 <body class="bg-gradient-to-br from-slate-50 via-gray-50 to-indigo-50/30 text-gray-800 antialiased">
-    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="flex flex-col items-center space-y-4">
             <div class="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
@@ -91,22 +87,16 @@
     </div>
 
     <div class="flex min-h-screen">
-        <!-- Sidebar -->
         @include('admin.layouts.sidebar')
 
-        <!-- Main Content Area -->
         <div class="flex-1 flex flex-col ml-64 min-h-screen">
-            <!-- Header -->
             @include('admin.layouts.header')
 
-            <!-- Main Content -->
             <main class="flex-1 p-6 mt-20 overflow-auto bg-transparent">
-                <!-- Breadcrumb -->
                 <div class="breadcrumb-container mb-6">
                     @include('admin.layouts.breadcrumb')
                 </div>
 
-                <!-- Page Content -->
                 <div id="main-content" class="transition-all duration-300 ease-in-out">
                     @yield('content')
                 </div>
@@ -114,7 +104,6 @@
         </div>
     </div>
 
-    <!-- JavaScript Dependencies -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -124,16 +113,13 @@
 
     @vite('resources/js/app.js')
 
-    <!-- Global JavaScript -->
     <script>
-        // CSRF Token Setup
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
 
-        // Global App Object
         window.AdminApp = {
             user: {
                 name: '{{ Auth::guard('dosen')->user()->nama ?? 'clockingoffbye' }}',
@@ -148,9 +134,7 @@
             }
         };
 
-        // Page Load Handler
         document.addEventListener('DOMContentLoaded', function() {
-            // Hide loading overlay
             setTimeout(() => {
                 const loadingOverlay = document.getElementById('loadingOverlay');
                 if (loadingOverlay) {
@@ -158,7 +142,6 @@
                 }
             }, 800);
 
-            // Initialize tooltips if needed
             if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
                 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
                 tooltipTriggerList.map(function(tooltipTriggerEl) {
@@ -166,7 +149,6 @@
                 });
             }
 
-            // Add smooth scroll to anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -187,7 +169,6 @@
             }));
         });
 
-        // Global Loading Function
         function showLoading() {
             const loadingOverlay = document.getElementById('loadingOverlay');
             const mainContent = document.getElementById('main-content');
@@ -206,12 +187,10 @@
             }, 200);
         }
 
-        // Page Navigation Handler
         window.addEventListener('beforeunload', function() {
             showLoading();
         });
 
-        // AJAX Error Handler
         $(document).ajaxError(function(event, xhr, settings, error) {
             hideLoading();
             console.error('AJAX Error:', error);
@@ -229,7 +208,6 @@
             }
         });
 
-        // Global Success Handler
         $(document).ajaxSuccess(function(event, xhr, settings) {
             hideLoading();
         });

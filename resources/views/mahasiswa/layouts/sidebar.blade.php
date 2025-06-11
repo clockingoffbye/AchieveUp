@@ -34,12 +34,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- System title -->
-        <div class="mt-3 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div class="text-xs font-semibold text-[#6041CE] tracking-wide">PORTAL MAHASISWA</div>
-            <div class="text-xs text-slate-500">Sistem Rekomendasi</div>
-        </div>
     </div>
 
     <nav class="flex-1 overflow-y-auto px-4 py-6 custom-scrollbar">
@@ -125,14 +119,6 @@
             </ul>
         </div>
     </nav>
-
-    {{-- Footer Section --}}
-    <div class="p-4 border-t border-slate-200/50 bg-gradient-to-r from-slate-50/50 to-white">
-        <div class="text-center">
-            <div class="text-xs text-slate-400 mb-1">© 2025 clockingoffbye</div>
-            <div class="text-xs text-slate-400">Portal Mahasiswa v1.0</div>
-        </div>
-    </div>
 </aside>
 
 @push('styles')

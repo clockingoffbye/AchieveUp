@@ -218,6 +218,51 @@
 
 @push('scripts')
     <script>
+        function showLoading() {
+            // Create or show a loading overlay that does NOT obscure SweetAlert modals
+            let overlay = document.getElementById('custom-loading-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'custom-loading-overlay';
+                overlay.style.position = 'fixed';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.width = '100vw';
+                overlay.style.height = '100vh';
+                overlay.style.background = 'rgba(255,255,255,0.4)';
+                overlay.style.zIndex = '1040'; 
+                overlay.style.display = 'flex';
+                overlay.style.alignItems = 'center';
+                overlay.style.justifyContent = 'center';
+                overlay.innerHTML = `
+            <div class="loader-spinner" style="border: 6px solid #eee; border-top: 6px solid #6041ce; border-radius: 50%; width: 48px; height: 48px; animation: spin 1s linear infinite;"></div>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        `;
+                document.body.appendChild(overlay);
+            }
+            overlay.style.display = 'flex';
+        }
+
+        function hideLoading() {
+            let overlay = document.getElementById('custom-loading-overlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+
+        // --- Patch SweetAlert2 to always be on top of the overlay ---
+        document.addEventListener("DOMContentLoaded", function() {
+            // When SweetAlert2 opens, bump its z-index above the overlay
+            document.body.addEventListener('DOMNodeInserted', function(e) {
+                if (e.target.classList && e.target.classList.contains('swal2-container')) {
+                    e.target.style.zIndex = '1060'; // Higher than overlay
+                }
+            }, false);
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             // Real-time clock functionality for WIB (UTC+7)
             function updateDateTime() {

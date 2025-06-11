@@ -1,42 +1,41 @@
-<div
-    class="flex flex-col lg:flex-row w-full sm:w-[400px] lg:w-full px-4 sm:px-6 mx-16 py-8 items-center gap-6 rounded-3xl bg-gradient-to-r from-[#6041CE] via-[#6041CE] to-[#513C99] shadow-2xl backdrop-blur-sm border border-white/10 observe-animation">
+<section class="relative -mt-16 z-10">
+    <div class="container-narrow">
+        <div
+            class="flex flex-col lg:flex-row w-full max-w-5xl mx-auto px-8 py-8 items-center gap-6 rounded-3xl gradient-primary shadow-2xl animate-on-scroll">
+            <div class="flex flex-col items-center gap-2 flex-1 group hover-scale cursor-default">
+                <p class="text-3xl lg:text-4xl font-bold text-white counter" data-target="1000">0</p>
+                <p class="text-sm lg:text-base font-medium text-white/90 text-center">Mahasiswa Berprestasi</p>
+            </div>
 
-    <div class="flex flex-col items-center gap-1 flex-1 group transition-all duration-300 hover:scale-105">
-        <p class="w-full text-center text-2xl lg:text-3xl font-bold text-white counter" data-target="1000">0</p>
-        <p class="w-full text-center text-sm lg:text-base font-normal text-white/90">Mahasiswa Berprestasi</p>
+            <div class="w-full h-px lg:w-px lg:h-14 bg-white/30"></div>
+
+            <div class="flex flex-col items-center gap-2 flex-1 group hover-scale cursor-default">
+                <p class="text-3xl lg:text-4xl font-bold text-white counter" data-target="250">0</p>
+                <p class="text-sm lg:text-base font-medium text-white/90 text-center">Program Studi</p>
+            </div>
+
+            <div class="w-full h-px lg:w-px lg:h-14 bg-white/30"></div>
+
+            <div class="flex flex-col items-center gap-2 flex-1 group hover-scale cursor-default">
+                <p class="text-3xl lg:text-4xl font-bold text-white counter" data-target="500">0</p>
+                <p class="text-sm lg:text-base font-medium text-white/90 text-center">Prestasi Tercatat</p>
+            </div>
+
+            <div class="w-full h-px lg:w-px lg:h-14 bg-white/30"></div>
+
+            <div class="flex flex-col items-center gap-2 flex-1 group hover-scale cursor-default">
+                <p class="text-3xl lg:text-4xl font-bold text-white counter" data-target="15">0</p>
+                <p class="text-sm lg:text-base font-medium text-white/90 text-center">Fakultas</p>
+            </div>
+        </div>
     </div>
-
-    <span class="block lg:hidden w-full h-[2px] bg-white/30"></span>
-    <span class="hidden lg:block w-[2px] h-[54px] bg-white/30"></span>
-
-    <div class="flex flex-col items-center gap-1 flex-1 group transition-all duration-300 hover:scale-105">
-        <p class="w-full text-center text-2xl lg:text-3xl font-bold text-white counter" data-target="250">0</p>
-        <p class="w-full text-center text-sm lg:text-base font-normal text-white/90">Program Studi</p>
-    </div>
-
-    <span class="block lg:hidden w-full h-[2px] bg-white/30"></span>
-    <span class="hidden lg:block w-[2px] h-[54px] bg-white/30"></span>
-
-    <div class="flex flex-col items-center gap-1 flex-1 group transition-all duration-300 hover:scale-105">
-        <p class="w-full text-center text-2xl lg:text-3xl font-bold text-white counter" data-target="500">0</p>
-        <p class="w-full text-center text-sm lg:text-base font-normal text-white/90">Prestasi Tercatat</p>
-    </div>
-
-    <span class="block lg:hidden w-full h-[2px] bg-white/30"></span>
-    <span class="hidden lg:block w-[2px] h-[54px] bg-white/30"></span>
-
-    <div class="flex flex-col items-center gap-1 flex-1 group transition-all duration-300 hover:scale-105">
-        <p class="w-full text-center text-2xl lg:text-3xl font-bold text-white counter" data-target="15">0</p>
-        <p class="w-full text-center text-sm lg:text-base font-normal text-white/90">Fakultas</p>
-    </div>
-</div>
+</section>
 
 <script>
-    // Counter animation
     function animateCounter(element) {
         const target = parseInt(element.getAttribute('data-target'));
-        const duration = 2000; // 2 seconds
-        const step = target / (duration / 16); // 60fps
+        const duration = 2000;
+        const step = target / (duration / 16);
         let current = 0;
 
         const timer = setInterval(() => {
@@ -45,19 +44,16 @@
                 current = target;
                 clearInterval(timer);
             }
-            element.textContent = Math.floor(current) + (target >= 1000 ? '+' : '');
+            element.textContent = Math.floor(current) + (target >= 100 ? '+' : '');
         }, 16);
     }
 
-    // Initialize counters when stats section is visible
     const statsObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const counters = entry.target.querySelectorAll('.counter');
                 counters.forEach((counter, index) => {
-                    setTimeout(() => {
-                        animateCounter(counter);
-                    }, index * 200);
+                    setTimeout(() => animateCounter(counter), index * 200);
                 });
                 statsObserver.unobserve(entry.target);
             }
@@ -67,9 +63,7 @@
     });
 
     document.addEventListener('DOMContentLoaded', () => {
-        const statsSection = document.querySelector('.observe-animation');
-        if (statsSection) {
-            statsObserver.observe(statsSection);
-        }
+        const statsSection = document.querySelector('.counter').closest('section');
+        if (statsSection) statsObserver.observe(statsSection);
     });
 </script>

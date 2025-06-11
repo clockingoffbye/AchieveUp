@@ -4,7 +4,6 @@
     {{-- Mobile Overlay --}}
     <div x-data="{ sidebarOpen: false }" @resize.window="sidebarOpen = window.innerWidth >= 1024 ? false : sidebarOpen"
         class="lg:hidden">
-        <!-- Mobile backdrop -->
         <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300"
             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
             x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100"
@@ -20,7 +19,6 @@
                     class="h-10 w-auto drop-shadow-sm transition-all duration-500"
                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
 
-                <!-- Fallback logo if image fails -->
                 <div
                     class="hidden w-10 h-10 bg-gradient-to-br from-[#6041CE] to-purple-600 rounded-xl items-center justify-center shadow-lg">
                     <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -33,12 +31,6 @@
                     class="absolute -inset-1 bg-gradient-to-r from-[#6041CE]/20 to-purple-500/20 rounded-lg blur opacity-30 group-hover:opacity-50 transition-opacity duration-500">
                 </div>
             </div>
-        </div>
-
-        <!-- Optional: Add system title -->
-        <div class="mt-3 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div class="text-xs font-semibold text-[#6041CE] tracking-wide">ADMIN PANEL</div>
-            <div class="text-xs text-slate-500">Sistem Rekomendasi</div>
         </div>
     </div>
 
@@ -219,14 +211,6 @@
             </ul>
         </div>
     </nav>
-
-    {{-- Footer Section (Optional) --}}
-    <div class="p-4 border-t border-slate-200/50 bg-gradient-to-r from-slate-50/50 to-white">
-        <div class="text-center">
-            <div class="text-xs text-slate-400 mb-1">© 2025 clockingoffbye</div>
-            <div class="text-xs text-slate-400">Admin Panel v1.0</div>
-        </div>
-    </div>
 </aside>
 
 @push('styles')
@@ -279,7 +263,6 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Add entrance animation for sidebar items
             const sidebarItems = document.querySelectorAll('.nav-item');
             sidebarItems.forEach((item, index) => {
                 item.style.opacity = '0';
@@ -293,7 +276,6 @@
                 }, index * 100);
             });
 
-            // Add active menu highlighting
             const currentUrl = window.location.pathname;
             const menuLinks = document.querySelectorAll('.nav-item a');
 
@@ -303,8 +285,8 @@
                 }
             });
 
-            console.log('🎯 Sidebar initialized');
-            console.log('📍 Current URL:', currentUrl);
+            console.log('Sidebar initialized');
+            console.log('Current URL:', currentUrl);
         });
     </script>
 @endpush
