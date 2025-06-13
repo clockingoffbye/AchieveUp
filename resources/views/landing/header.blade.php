@@ -30,7 +30,9 @@
 
         <!-- Desktop CTA -->
         <div class="hidden lg:flex items-center">
-            <a href="{{ url('/login') }}" class="btn-primary">
+            <a href="{{ url('/login') }}"
+                class="px-8 py-2 rounded-md font-semibold text-white text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 min-w-[180px]"
+                style="background: linear-gradient(180deg, #5F40CB 0%, #5039a1 100%);">
                 Masuk ke Sistem
             </a>
         </div>
@@ -58,6 +60,7 @@
                 <div class="mt-4">
                     <a href="{{ url('/login') }}" class="btn-primary w-full text-center block">Masuk ke Sistem</a>
                 </div>
+
             </div>
         </div>
     </div>

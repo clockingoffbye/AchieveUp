@@ -27,14 +27,14 @@
 
             <div class="flex flex-col sm:flex-row gap-4 w-full justify-center lg:justify-start">
                 <button
-                    class="px-8 py-4 rounded-xl font-semibold text-white text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 min-w-[180px]"
-                    style="background: linear-gradient(180deg, #5F40CB 0%, #2F2065 100%);">
+                    class="px-8 py-3 rounded-md font-semibold text-white text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 min-w-[180px]"
+                    style="background: linear-gradient(180deg, #5F40CB 0%, #5039a1 100%);">
                     Mulai Sekarang
                 </button>
 
                 <button
-                    class="px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 min-w-[180px] bg-transparent text-[#5F40CB] hover:bg-[#5F40CB] hover:text-white"
-                    style="border: 1px solid #5F40CB;">
+                    class="px-8 py-3 rounded-md font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 min-w-[180px] bg-transparent text-[#5F40CB] hover:bg-[#5F40CB] hover:text-white"
+                    style="border: 1px solid #5039a1;">
                     Pelajari Lebih Lanjut
                 </button>
             </div>

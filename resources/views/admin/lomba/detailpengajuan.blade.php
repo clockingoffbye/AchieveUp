@@ -212,6 +212,27 @@
                                         </p>
                                     </div>
                                 </div>
+
+                                <!-- NEW: Competition URL -->
+                                @if ($pengajuan->lomba->url)
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold text-gray-800 mb-1">Website Lomba</h4>
+                                            <a href="{{ $pengajuan->lomba->url }}" target="_blank"
+                                                class="text-blue-600 hover:text-blue-800 transition-colors break-all">
+                                                {{ $pengajuan->lomba->url }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="space-y-6">
@@ -273,6 +294,48 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- NEW: Competition Poster Section -->
+                        @if ($pengajuan->lomba->file_poster)
+                            <div class="mt-8 border-t border-gray-200 pt-6">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    Poster Lomba
+                                </h4>
+                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <div class="flex flex-col items-center space-y-4">
+                                        <img src="{{ asset('storage/' . $pengajuan->lomba->file_poster) }}"
+                                            alt="Poster {{ $pengajuan->lomba->judul }}"
+                                            class="max-w-md w-full h-auto rounded-lg shadow-md border border-gray-200">
+                                        <div class="flex gap-3">
+                                            <a href="{{ asset('storage/' . $pengajuan->lomba->file_poster) }}"
+                                                target="_blank"
+                                                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium text-sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                </svg>
+                                                Lihat Full Size
+                                            </a>
+                                            <a href="{{ asset('storage/' . $pengajuan->lomba->file_poster) }}" download
+                                                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-600 text-white hover:bg-gray-700 transition-colors font-medium text-sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                                Download
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

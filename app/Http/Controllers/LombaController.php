@@ -74,6 +74,10 @@ class LombaController extends Controller
     {
         $lombas = Lomba::with('bidang')->get();
 
+        $data = Lomba::orderBy('id')->get();
+
+        $data = Lomba::orderBy('id', 'asc')->get();
+
         $data = $lombas->map(function ($lomba) {
             $warnaTingkat = match ($lomba->tingkat) {
                 'internasional' => 'bg-red-100 text-red-800',

@@ -20,10 +20,8 @@
                 class="bg-blue-600 text-white px-4 py-1 rounded text-sm hover:bg-blue-700">
                 + Add
             </button>
-
         </div>
     </div>
-
 
     <!-- Table Wrapper -->
     <div class="overflow-x-auto bg-white shadow rounded-b-[12px] border-t-0 border border-gray-200">
@@ -43,18 +41,18 @@
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-
             </tbody>
         </table>
         <p id="lomba_info" class="text-sm text-gray-500 mt-2"></p>
         <div id="lomba_pagination" class="mt-2 flex flex-wrap gap-2"></div>
     </div>
+@endsection
 
-
-    </div>
-
+@push('styles')
     <script src="//unpkg.com/alpinejs" defer></script>
+@endpush
 
+@push('scripts')
     <script>
         $(document).ready(function() {
             let lombaData = [];
@@ -190,7 +188,6 @@
         });
     </script>
 
-
     <script>
         $(document).ready(function() {
             $('#show-entry, #search-bar').on('input change', function() {
@@ -223,5 +220,4 @@
             });
         </script>
     @endif
-
-@endsection
+@endpush
